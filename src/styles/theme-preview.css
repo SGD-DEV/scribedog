@@ -1,0 +1,503 @@
+/* Theme builder preview (src/components/theme/ThemePreview.tsx): a static
+   miniature of the app. The theme being edited sets its custom properties
+   inline on .theme-preview, so every colour here is a var() and nothing is
+   literal; the rules mirror the app's own (file-tree.css, find.css,
+   editor-content.css, dialogs.css) at a smaller scale. Differences between
+   light and dark hang off [data-mode], not .dark, because the preview's mode
+   need not be the app's. */
+
+.theme-preview {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(var(--overlay-rgb), 0.12);
+  border-radius: 1rem;
+  background:
+    radial-gradient(circle at top, rgba(var(--overlay-rgb), 0.06), transparent 40%),
+    linear-gradient(180deg, var(--body-bg-start) 0%, var(--body-bg-end) 100%);
+  color: rgba(var(--text-rgb), var(--text-default-alpha));
+  font-size: 0.78rem;
+  line-height: 1.45;
+  user-select: none;
+}
+
+.theme-preview svg {
+  width: 0.9rem;
+  height: 0.9rem;
+  flex-shrink: 0;
+}
+
+.theme-preview__window {
+  display: grid;
+  grid-template-columns: minmax(7.5rem, 32%) minmax(0, 1fr);
+  gap: 0.55rem;
+  padding: 0.6rem;
+}
+
+/* Sidebar with the file tree */
+.theme-preview__sidebar {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  border: 1px solid rgba(var(--overlay-rgb), 0.08);
+  border-radius: 0.8rem;
+  background: rgba(var(--surface-raised-rgb), 0.9);
+  padding: 0.5rem 0.65rem 0.5rem 0.4rem;
+}
+
+.theme-preview__sidebar-title {
+  padding: 0.1rem 0.35rem 0.35rem;
+  color: rgba(var(--muted-rgb), 0.9);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.theme-preview__row {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+  border-radius: 0.5rem;
+  padding: 0.22rem 0.4rem;
+  white-space: nowrap;
+}
+
+.theme-preview__row > span:first-of-type {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.theme-preview__row--nested {
+  padding-left: 1.1rem;
+}
+
+.theme-preview__row.is-hover {
+  background: rgb(var(--surface-hover-rgb));
+}
+
+.theme-preview__row.is-active {
+  background: rgba(var(--selection-rgb), 0.2);
+  box-shadow: inset 3px 0 0 rgba(var(--accent-rgb), 0.85);
+  color: rgb(var(--text-rgb));
+  font-weight: 600;
+}
+
+.theme-preview__row.is-search-match {
+  background: rgba(var(--find-match-rgb), 0.12);
+}
+
+.theme-preview__muted {
+  color: rgba(var(--muted-rgb), 0.9);
+}
+
+.theme-preview__dirty {
+  flex-shrink: 0;
+  width: 0.45rem;
+  height: 0.45rem;
+  margin-left: auto;
+  border-radius: 9999px;
+  background: rgb(var(--unsaved-rgb));
+  box-shadow: 0 0 0 3px rgba(var(--unsaved-rgb), 0.12);
+}
+
+.theme-preview__badge {
+  margin-left: auto;
+  min-width: 1rem;
+  border-radius: 9999px;
+  background: rgba(var(--find-match-rgb), 0.45);
+  color: rgb(var(--text-rgb));
+  font-size: 0.62rem;
+  font-weight: 600;
+  line-height: 1rem;
+  text-align: center;
+}
+
+.theme-preview[data-mode="dark"] .theme-preview__badge {
+  background: rgba(var(--find-match-rgb), 0.3);
+}
+
+.theme-preview__scrollbar {
+  position: absolute;
+  top: 1.8rem;
+  right: 0.2rem;
+  width: 0.28rem;
+  height: 2.6rem;
+  border-radius: 9999px;
+  background: rgba(var(--chrome-rgb), 0.45);
+}
+
+/* Toolbar, editor and status chips */
+.theme-preview__main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.theme-preview__toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  border: 1px solid rgba(var(--overlay-rgb), 0.08);
+  border-radius: 0.7rem;
+  background: rgba(var(--surface-rgb), 0.9);
+  padding: 0.25rem;
+}
+
+.theme-preview__tool {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.55rem;
+  height: 1.55rem;
+  border-radius: 0.45rem;
+}
+
+.theme-preview__tool.is-hover {
+  background: rgb(var(--surface-hover-rgb));
+}
+
+.theme-preview__tool.is-active {
+  background: rgb(var(--surface-active-rgb));
+  color: rgb(var(--text-rgb));
+}
+
+.theme-preview__tool-separator {
+  width: 1px;
+  height: 1rem;
+  margin: 0 0.15rem;
+  background: rgba(var(--overlay-rgb), 0.12);
+}
+
+.theme-preview__ai-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-left: auto;
+  border: 1px solid rgba(var(--accent-light-rgb), 0.5);
+  border-radius: 0.5rem;
+  background: linear-gradient(120deg, rgba(var(--accent-rgb), 0.9), rgba(var(--accent-dark-rgb), 0.9));
+  color: rgba(var(--on-accent-rgb), 0.98);
+  padding: 0.2rem 0.5rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.theme-preview__editor {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  border: 1px solid rgba(var(--overlay-rgb), 0.08);
+  border-radius: 0.8rem;
+  background: rgba(var(--surface-rgb), 0.9);
+  color: var(--tw-prose-body);
+  padding: 0.65rem 0.75rem;
+}
+
+.theme-preview__editor--paper {
+  background: rgb(var(--surface-rgb));
+}
+
+.theme-preview__heading {
+  color: var(--tw-prose-headings);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.theme-preview__text {
+  margin: 0;
+}
+
+.theme-preview__link {
+  color: var(--tw-prose-links);
+  text-decoration: underline;
+  text-decoration-color: rgba(var(--accent-rgb), 0.7);
+  text-underline-offset: 2px;
+}
+
+.theme-preview__marker {
+  border-radius: 0.15rem;
+  background: var(--highlight-bg);
+  color: inherit;
+  padding: 0 0.1rem;
+}
+
+.theme-preview__selection {
+  border-radius: 0.1rem;
+  background: rgba(var(--selection-rgb), 0.32);
+}
+
+.theme-preview__search {
+  border-radius: 0.15rem;
+  background: rgba(var(--find-match-rgb), 0.4);
+  box-shadow: 0 0 0 1px rgba(var(--find-match-rgb), 0.25);
+}
+
+.theme-preview__search.is-current {
+  background: rgba(var(--find-current-rgb), 0.55);
+  box-shadow: 0 0 0 1px rgba(var(--find-current-rgb), 0.4);
+}
+
+.theme-preview__task {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.theme-preview__checkbox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 0.2rem;
+  background: rgb(var(--text-rgb));
+  color: rgb(var(--surface-rgb));
+}
+
+.theme-preview__checkbox svg {
+  width: 0.7rem;
+  height: 0.7rem;
+}
+
+.theme-preview__quote {
+  border-left: 3px solid var(--tw-prose-quote-borders);
+  color: var(--tw-prose-quotes);
+  font-style: italic;
+  padding-left: 0.5rem;
+}
+
+/* The code block keeps Typography's own dark background, as in the editor;
+   only the token colours are the theme's. */
+.theme-preview__code {
+  margin: 0;
+  overflow: hidden;
+  border-radius: 0.45rem;
+  background: var(--tw-prose-pre-bg);
+  color: var(--tw-prose-pre-code);
+  padding: 0.45rem 0.6rem;
+  font-size: 0.7rem;
+  line-height: 1.5;
+  white-space: pre;
+}
+
+.theme-preview__code-comment {
+  color: var(--code-comment);
+  font-style: italic;
+}
+
+.theme-preview__code-keyword {
+  color: var(--code-keyword);
+}
+
+.theme-preview__code-string {
+  color: var(--code-string);
+}
+
+.theme-preview__code-number {
+  color: var(--code-number);
+}
+
+.theme-preview__code-function {
+  color: var(--code-function);
+}
+
+.theme-preview__code-type {
+  color: var(--code-type);
+}
+
+.theme-preview__code-variable {
+  color: var(--code-variable);
+}
+
+.theme-preview__review {
+  border-left: 3px solid rgba(var(--accent-rgb), 0.85);
+  border-radius: 0.3rem;
+  background: rgba(var(--accent-rgb), 0.06);
+  padding: 0.3rem 0.5rem;
+}
+
+.theme-preview__diff-removed {
+  border-radius: 0.15rem;
+  background: var(--diff-removed-bg);
+  text-decoration: line-through;
+  text-decoration-color: var(--diff-removed-accent);
+}
+
+.theme-preview__diff-added {
+  border-radius: 0.15rem;
+  background: var(--diff-added-bg);
+  box-shadow: inset 0 -2px 0 var(--diff-added-accent);
+}
+
+.theme-preview__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.theme-preview__chip {
+  border: 1px solid transparent;
+  border-radius: 9999px;
+  padding: 0.1rem 0.5rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+
+.theme-preview__chip--error {
+  border-color: rgba(var(--error-soft-rgb), 0.35);
+  background: rgba(var(--error-bg-rgb), 0.82);
+  color: var(--error-fg);
+}
+
+.theme-preview__chip--success {
+  border-color: rgba(var(--success-soft-rgb), 0.28);
+  background: rgba(var(--success-bg-rgb), 0.82);
+  color: var(--success-fg);
+}
+
+.theme-preview__chip--warning {
+  border-color: rgba(var(--warning-soft-rgb), 0.22);
+  background: rgba(var(--warning-bg-rgb), 0.82);
+  color: var(--amber-fg);
+}
+
+.theme-preview__chip--info {
+  border-color: rgba(var(--info-soft-rgb), 0.3);
+  background: rgba(var(--info-bg-rgb), 0.82);
+  color: var(--blue-fg);
+}
+
+/* Dialog over the backdrop, plus a toast */
+.theme-preview__overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  background: rgba(var(--backdrop-rgb), 0.64);
+  padding: 0.8rem 0.6rem;
+}
+
+.theme-preview__dialog {
+  width: min(15rem, 100%);
+  border: 1px solid rgba(var(--overlay-rgb), 0.1);
+  border-radius: 0.9rem;
+  background: rgba(var(--surface-strong-rgb), 0.96);
+  box-shadow: 0 10px 28px rgba(var(--shadow-rgb), 0.12);
+  padding: 0.65rem 0.75rem;
+}
+
+.theme-preview[data-mode="dark"] .theme-preview__dialog {
+  box-shadow: 0 14px 36px rgba(var(--shadow-rgb), 0.42);
+}
+
+.theme-preview__dialog-title {
+  color: rgba(var(--text-rgb), 0.94);
+  font-weight: 700;
+}
+
+.theme-preview__dialog-text {
+  margin-top: 0.2rem;
+  color: rgba(var(--text-rgb), 0.62);
+  font-size: 0.72rem;
+}
+
+.theme-preview__dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  margin-top: 0.55rem;
+}
+
+/* The shadcn button variants (components/ui/button.tsx). */
+.theme-preview__button {
+  border: 1px solid transparent;
+  border-radius: 0.45rem;
+  padding: 0.15rem 0.55rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
+.theme-preview__button--primary {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.theme-preview__button--outline {
+  border-color: var(--border);
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.theme-preview[data-mode="dark"] .theme-preview__button--outline {
+  border-color: var(--input);
+}
+
+.theme-preview__toast {
+  max-width: 11rem;
+  border: 1px solid rgba(var(--error-soft-rgb), 0.35);
+  border-radius: 0.75rem;
+  background: rgba(var(--error-bg-rgb), 0.94);
+  box-shadow: 0 10px 28px rgba(var(--shadow-rgb), 0.14);
+  color: var(--error-fg);
+  padding: 0.4rem 0.6rem;
+  font-size: 0.72rem;
+}
+
+.theme-preview[data-mode="dark"] .theme-preview__toast {
+  box-shadow: 0 14px 36px rgba(var(--shadow-rgb), 0.45);
+}
+
+/* Zen mode (zen-mode.css): the bare column on the page, the exit button in
+   the top-left corner and the unsaved dot in the top-right one. Without a
+   Zen page of its own the theme's window gradient shows, as in the app; a
+   Zen page sets `background` inline over it. */
+.theme-preview--zen {
+  display: flex;
+  justify-content: center;
+  min-height: 21rem;
+  padding: 2.6rem 1rem 1.6rem;
+}
+
+.theme-preview__zen-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: min(24rem, 100%);
+  color: var(--tw-prose-body);
+  font-size: 0.85rem;
+}
+
+.theme-preview__zen-column .theme-preview__heading {
+  font-size: 1.25rem;
+}
+
+.theme-preview__zen-exit {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.6rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  border: 1px solid rgba(var(--overlay-rgb), 0.12);
+  border-radius: 0.5rem;
+  background: rgba(var(--surface-strong-rgb), 0.9);
+  color: rgba(var(--text-rgb), 0.75);
+}
+
+.theme-preview__zen-dirty {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: rgb(var(--unsaved-rgb));
+  box-shadow: 0 0 0 3px rgba(var(--unsaved-rgb), 0.12);
+}

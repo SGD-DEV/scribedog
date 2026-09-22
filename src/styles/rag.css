@@ -85,7 +85,7 @@
 
 .rag-settings__error {
   margin: 0;
-  color: rgba(248, 113, 113, 0.9);
+  color: rgba(var(--error-soft-rgb), 0.9);
   font-size: 0.82rem;
   line-height: 1.5;
 }

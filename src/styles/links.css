@@ -122,12 +122,12 @@
   border: 1px solid rgba(var(--overlay-rgb),0.14);
   border-radius: 0.8rem;
   background: rgba(var(--surface-strong-rgb),0.98);
-  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16);
+  box-shadow: 0 12px 32px rgba(var(--shadow-rgb), 0.16);
   padding: 0.45rem;
 }
 
 .dark .file-link-suggest {
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 16px 40px rgba(var(--shadow-rgb), 0.5);
 }
 
 .file-link-suggest__hint {

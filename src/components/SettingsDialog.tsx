@@ -354,6 +354,7 @@ type SettingsDialogProps = {
   onSave: (settings: AiSettings) => void;
   onClose: () => void;
   onAssistantEditRequest: (assistant: Assistant | null) => void;
+  onThemeBuilderRequest: () => void;
 };
 
 function clampContextLength(value: string) {
@@ -372,7 +373,8 @@ export function SettingsDialog({
   settings,
   onSave,
   onClose,
-  onAssistantEditRequest
+  onAssistantEditRequest,
+  onThemeBuilderRequest
 }: SettingsDialogProps) {
   const { t, i18n } = useTranslation();
   const [activeTab, setActiveTab] = useState<SettingsTab>("application");
@@ -690,7 +692,7 @@ export function SettingsDialog({
               </SettingsPage>
             ) : activeTab === "appearance" ? (
               <SettingsPage tab="appearance">
-                <AppearanceSettings />
+                <AppearanceSettings onThemeBuilderRequest={onThemeBuilderRequest} />
               </SettingsPage>
             ) : activeTab === "fonts" ? (
               <SettingsPage tab="fonts">

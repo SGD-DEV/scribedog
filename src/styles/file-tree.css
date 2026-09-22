@@ -48,16 +48,6 @@
   outline: none;
 }
 
-/* The open note, and only the open note, carries the accent bar — the same
-   "current" marker the details panel's outline uses. Selecting a row (click,
-   arrow keys, a folder to rename or delete) must never look like opening it,
-   so --selected below stays on its own quieter tint even when the selected
-   row and the open note differ. */
-.file-tree__row--active {
-  background: rgba(var(--surface-active-rgb),0.96);
-  box-shadow: inset 3px 0 0 rgba(var(--accent-rgb),0.85);
-}
-
 .file-tree__row--selected {
   background: rgba(var(--selection-rgb), 0.14);
 }
@@ -66,8 +56,18 @@
   background: rgba(var(--selection-rgb), 0.18);
 }
 
-.file-tree__row--selected.file-tree__row--active {
+/* The open note, and only the open note, carries the accent bar — the same
+   "current" marker the details panel's outline uses. Selecting a row (click,
+   arrow keys, a folder to rename or delete) must never look like opening it,
+   so --selected above stays on its own quieter tint while the open note is
+   the stronger one with the bar. One look however the note was opened (a
+   click here, which also selects it, or the "In progress" list, a link, the
+   quick switcher, which do not), and the same one in working-set.css, so
+   the open note reads alike in both lists. Two classes so it outranks the
+   hover and --selected rules above. */
+.file-tree__row.file-tree__row--active {
   background: rgba(var(--selection-rgb), 0.2);
+  box-shadow: inset 3px 0 0 rgba(var(--accent-rgb),0.85);
 }
 
 .file-tree__row svg {
@@ -215,11 +215,11 @@
 }
 
 .file-tree__rename-input:focus {
-  border-bottom-color: rgba(147, 197, 253, 0.7);
+  border-bottom-color: rgba(var(--info-soft-rgb), 0.7);
 }
 
 .file-tree__rename-input::selection {
-  background: rgba(59, 130, 246, 0.45);
+  background: rgba(var(--info-rgb), 0.45);
 }
 
 .file-tree__rename-suffix {
@@ -236,11 +236,11 @@
   border-radius: 0.75rem;
   background: rgba(var(--surface-rgb),0.98);
   padding: 0.3rem;
-  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.14);
+  box-shadow: 0 12px 32px rgba(var(--shadow-rgb), 0.14);
 }
 
 .dark .file-tree-context-menu {
-  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 20px 48px rgba(var(--shadow-rgb), 0.45);
 }
 
 .file-tree-context-menu__item {
@@ -297,7 +297,7 @@
 
 .file-tree-context-menu__item--danger:hover,
 .file-tree-context-menu__item--danger:focus-visible {
-  background: rgba(248, 113, 113, 0.16);
+  background: rgba(var(--error-soft-rgb), 0.16);
 }
 
 .sidebar-panel__item-dirty {
@@ -305,8 +305,8 @@
   width: 0.55rem;
   height: 0.55rem;
   border-radius: 9999px;
-  background: #fde68a;
-  box-shadow: 0 0 0 4px rgba(253, 230, 138, 0.12);
+  background: rgb(var(--unsaved-rgb));
+  box-shadow: 0 0 0 4px rgba(var(--unsaved-rgb), 0.12);
 }
 
 /* A collapsed folder with an unsaved note somewhere inside: the same mark,
@@ -314,7 +314,7 @@
    one keeps the filled dot, and both can stand side by side). */
 .sidebar-panel__item-dirty--inside {
   background: transparent;
-  box-shadow: inset 0 0 0 1px #fde68a, 0 0 0 4px rgba(253, 230, 138, 0.12);
+  box-shadow: inset 0 0 0 1px rgb(var(--unsaved-rgb)), 0 0 0 4px rgba(var(--unsaved-rgb), 0.12);
 }
 
 /* The vault agent's paw: a file (or a collapsed folder holding one) has a

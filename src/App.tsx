@@ -98,6 +98,7 @@ function App() {
   // Wrapped in an object so "create new assistant" (assistant: null) is
   // distinguishable from "no edit in progress" (whole value null).
   const [assistantEditTarget, setAssistantEditTarget] = useState<{ assistant: Assistant | null } | null>(null);
+  const [isThemeBuilderOpen, setIsThemeBuilderOpen] = useState(false);
   const [importFileList, setImportFileList] = useState<ImportSource[] | null>(null);
   const [importTargetFolder, setImportTargetFolder] = useState<string | null>(null);
   // What a dropped folder contributed beyond the importable files themselves.
@@ -1206,6 +1207,18 @@ function App() {
           // reopens on the assistants tab once editing is done.
           setIsAiSettingsOpen(false);
           setAssistantEditTarget({ assistant });
+        }}
+        onThemeBuilderRequest={() => {
+          // Same pattern as the assistants: the builder is its own modal, and
+          // settings come back on the appearance page once it closes.
+          setIsAiSettingsOpen(false);
+          setIsThemeBuilderOpen(true);
+        }}
+        isThemeBuilderOpen={isThemeBuilderOpen}
+        onCloseThemeBuilder={() => {
+          setIsThemeBuilderOpen(false);
+          setSettingsInitialTab("appearance");
+          setIsAiSettingsOpen(true);
         }}
         assistantEditTarget={assistantEditTarget}
         onCloseAssistantEdit={() => {

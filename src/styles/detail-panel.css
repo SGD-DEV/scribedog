@@ -85,11 +85,11 @@
 }
 
 .detail-panel__title-input:focus {
-  border-bottom-color: rgba(147, 197, 253, 0.7);
+  border-bottom-color: rgba(var(--info-soft-rgb), 0.7);
 }
 
 .detail-panel__title-input::selection {
-  background: rgba(59, 130, 246, 0.45);
+  background: rgba(var(--info-rgb), 0.45);
 }
 
 /* The title is a breadcrumb: the folders leading to the note, then the note
@@ -259,7 +259,7 @@
    carry, so it keeps the warning colour even while the button is off. */
 .detail-panel__save-button--warning:disabled {
   opacity: 1;
-  border-color: rgba(251, 191, 36, 0.22);
+  border-color: rgba(var(--warning-soft-rgb), 0.22);
   background: rgba(var(--warning-bg-rgb), 0.55);
   color: var(--amber-fg);
 }
@@ -318,9 +318,9 @@
   width: 1.3rem;
   height: 1.3rem;
   border-radius: 999px;
-  border: 1px solid rgb(255 255 255 / 0.4);
-  background: rgb(255 255 255 / 0.12);
-  color: #ffffff;
+  border: 1px solid rgba(var(--on-dark-rgb), 0.4);
+  background: rgba(var(--on-dark-rgb), 0.12);
+  color: rgb(var(--on-dark-rgb));
   cursor: pointer;
   transition:
     background-color 0.15s ease,
@@ -329,8 +329,8 @@
 }
 
 .detail-panel__ai-chip-cancel:hover {
-  background: rgb(255 255 255 / 0.24);
-  border-color: rgb(255 255 255 / 0.7);
+  background: rgba(var(--on-dark-rgb), 0.24);
+  border-color: rgba(var(--on-dark-rgb), 0.7);
 }
 
 .detail-panel__ai-chip-cancel:active {
@@ -358,7 +358,7 @@
 
 .detail-panel__message--error {
   border-style: solid;
-  border-color: rgba(248, 113, 113, 0.35);
+  border-color: rgba(var(--error-soft-rgb), 0.35);
   color: var(--error-fg);
 }
 
@@ -374,12 +374,12 @@
   border: 1px solid rgba(var(--overlay-rgb),0.1);
   border-radius: 1rem;
   background: rgba(var(--surface-strong-rgb),0.96);
-  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+  box-shadow: 0 16px 40px rgba(var(--shadow-rgb), 0.12);
   padding: 1rem 1.1rem;
 }
 
 .dark .update-notification {
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.42);
+  box-shadow: 0 24px 60px rgba(var(--shadow-rgb), 0.42);
 }
 
 .update-notification__header {

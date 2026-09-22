@@ -97,8 +97,8 @@
   width: 0.7rem;
   height: 0.7rem;
   border-radius: 9999px;
-  background: #fde68a;
-  box-shadow: 0 0 0 4px rgba(253, 230, 138, 0.12);
+  background: rgb(var(--unsaved-rgb));
+  box-shadow: 0 0 0 4px rgba(var(--unsaved-rgb), 0.12);
 }
 
 /* Current text size while pinching or Ctrl+wheeling (useZenFontZoom),

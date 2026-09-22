@@ -94,7 +94,7 @@ notes — fluently, privately, and for free.
 | 📤 Export | Export notes or whole folders to PDF, DOCX, ODT, or HTML | Right-click → Export… |
 | 📂 File management | File tree, create/rename/delete, flexible sorting, live filesystem sync | Sidebar |
 | 📱 Mobile access & sync | Plain `.md` files work with any sync service and mobile Markdown app | Bring your own sync |
-| 🎨 Customizable UI | Light/dark theme, 10 languages, fully remappable keyboard shortcuts | `Ctrl+#` (shortcuts cheat sheet) |
+| 🎨 Customizable UI | Light/dark and four more built-in themes, your own colour themes, 10 languages, fully remappable keyboard shortcuts | `Ctrl+#` (shortcuts cheat sheet) |
 | 🔒 Privacy first | No telemetry, bring-your-own-key cloud AI, tightly scoped filesystem access | — |
 
 ### 🤖 AI-assisted writing — local by default, cloud if you want it
@@ -262,6 +262,8 @@ ScribeDog stores everything as plain `.md` files in a normal folder — so makin
 
 ### 🎨 Comfortable to use
 - Light and dark theme, plus an optional paper-white page inside the dark UI for judging long or layout-heavy documents
+- Four more built-in themes next to Light and Dark: a warm Sepia for long writing sessions, the cool dark Fjord, the warm dark Fireside and Midnight in true black for OLED screens
+- Your own colour themes: the theme builder (*Settings → Appearance*) starts from any of the built-in themes, and you pick a handful of base colours (background, surface, text, muted text, chrome, accent) while hover, selection, borders and shadows follow on their own. A live preview shows every colour before you use the theme, including the paper sheet and Zen mode, which can get a background and text colour of their own. An *Advanced* section covers status, highlight, diff and code colours. Themes can be exported and imported as a small JSON file or through the clipboard
 
   <img src="src/assets/scribe-dog-light-theme.png" alt="ScribeDog light theme" width="700">
 

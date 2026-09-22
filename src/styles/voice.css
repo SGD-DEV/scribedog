@@ -3,7 +3,7 @@
 
 /* Voice input (issue #7): dictation banner, mic button, model download. */
 .editor-view__feedback--voice {
-  border-color: rgba(248, 113, 113, 0.35);
+  border-color: rgba(var(--error-soft-rgb), 0.35);
   background: rgba(var(--surface-rgb),0.9);
   /* Outward glow follows the measured speech level (inline box-shadow,
      updated ~every 80 ms) — the transition smooths between level samples. */
@@ -29,7 +29,7 @@
   height: 0.55rem;
   margin-right: 0.5rem;
   border-radius: 9999px;
-  background: rgb(239, 68, 68);
+  background: rgb(var(--error-rgb));
   animation: voice-recording-pulse 1.2s ease-in-out infinite;
 }
 
@@ -89,7 +89,7 @@
 .voice-insert-widget {
   display: inline;
   margin: 0 0.1rem;
-  color: rgb(239, 68, 68);
+  color: rgb(var(--error-rgb));
   font-weight: 600;
   animation: voice-recording-pulse 1.2s ease-in-out infinite;
 }

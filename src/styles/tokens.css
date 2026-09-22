@@ -4,8 +4,8 @@
 :root {
   font-family: "Geist Variable", system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", sans-serif;
-  background: #f8fafc;
-  color: rgb(15, 23, 42);
+  background: var(--body-bg-start);
+  color: rgb(var(--text-rgb));
   font-synthesis: weight style;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -26,6 +26,20 @@
   --accent-dark-rgb: 147, 51, 234;
   --accent-darker-rgb: 76, 29, 130;
   --accent-darkest-rgb: 49, 22, 74;
+
+  /* Box-shadow tone. Here rather than in the palette block for the same
+     reason as the accent: a popover or toast inside the paper surface is
+     still part of the dark UI and keeps the dark shadow. */
+  --shadow-rgb: 15, 23, 42;
+
+  /* Colours that do not belong to a theme: controls drawn on top of content
+     whose own colour the theme does not decide (an image, a code block, the
+     AI chip). Tokens only so that no literal colour is left in the component
+     sheets. */
+  --on-dark-rgb: 255, 255, 255;
+  --on-image-bg-rgb: 255, 255, 255;
+  --on-image-fg-rgb: 31, 41, 55;
+  --on-image-edge-rgb: 0, 0, 0;
 }
 
 /* The light palette. The second selector is the "paper" editing surface
@@ -45,7 +59,7 @@
   --text-default-alpha: 0.82;
   --muted-rgb: 100, 116, 139;
   --surface-rgb: 255, 255, 255;
-  --surface-raised-rgb: 248, 250, 252;
+  --surface-raised-rgb: 249, 250, 250;
   --surface-strong-rgb: 255, 255, 255;
   /* One slate step darker than the previous 100/200 pair: near-white RGB
      deltas read far weaker against a white page than the same delta reads
@@ -55,16 +69,16 @@
      Hover/active/selection/chrome below are also tuned to the exact same
      hue (215°, solving G = R + 5/12*(B-R) with B-R a multiple of 12) so the
      "chrome" grays read as one temperature at a glance, not just close. */
-  --surface-hover-rgb: 228, 233, 240;
-  --surface-active-rgb: 201, 211, 225;
-  --selection-rgb: 69, 84, 105;
+  --surface-hover-rgb: 231, 233, 234;
+  --surface-active-rgb: 208, 210, 213;
+  --selection-rgb: 83, 91, 102;
   /* Scrollbar-thumb tone. Kept separate from --muted-rgb (text) so the thumb
      can be neutralized independently of muted text color; see the dark
      theme below, where the two diverge. */
-  --chrome-rgb: 100, 115, 136;
-  --backdrop-rgb: 100, 116, 139;
-  --body-bg-start: #f8fafc;
-  --body-bg-end: #f2f4f7;
+  --chrome-rgb: 118, 122, 127;
+  --backdrop-rgb: 94, 110, 132;
+  --body-bg-start: #eff3f6;
+  --body-bg-end: #e9edf0;
   --amber-fg: #92400e;
   --blue-fg: #1d4ed8;
   --error-fg: #b91c1c;
@@ -73,6 +87,28 @@
   --success-bg-rgb: 220, 252, 231;
   --warning-bg-rgb: 255, 251, 235;
   --info-bg-rgb: 239, 246, 255;
+  /* Saturated status colours as RGB triplets, each use picks its alpha.
+     Three steps per role (soft/base/strong: Tailwind 400/500/600, the values
+     these places always had). Shared by both themes, so the dark palette
+     below does not redeclare them. */
+  --error-soft-rgb: 248, 113, 113;
+  --error-rgb: 239, 68, 68;
+  --error-strong-rgb: 220, 38, 38;
+  --success-soft-rgb: 74, 222, 128;
+  --success-rgb: 34, 197, 94;
+  --success-strong-rgb: 22, 163, 74;
+  --warning-soft-rgb: 251, 191, 36;
+  --warning-rgb: 234, 179, 8;
+  --warning-strong-rgb: 202, 138, 4;
+  --info-soft-rgb: 147, 197, 253;
+  --info-rgb: 59, 130, 246;
+  /* The unsaved-changes dot in the file tree and zen mode. */
+  --unsaved-rgb: 253, 230, 138;
+  /* Find & replace: every match, and the current one. */
+  --find-match-rgb: 250, 204, 21;
+  --find-current-rgb: 249, 115, 22;
+  /* Text on the accent gradient (AI buttons, the user's chat bubbles). */
+  --on-accent-rgb: 245, 240, 255;
   /* Text-marker highlight (==text==): a translucent yellow so the text
      underneath keeps its own colour and stays readable. */
   --highlight-bg: rgba(253, 224, 71, 0.55);
@@ -98,10 +134,11 @@
   --code-type: #67e8f9;
   --code-variable: #f0abfc;
 
+  /* shadcn/ui tokens, reduced to the ones src/components/ui/ and the base
+     layer in App.css actually use. A custom theme derives them from its
+     base colours (src/lib/theme/derive.ts). */
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
   --primary: oklch(0.205 0 0);
@@ -109,34 +146,19 @@
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
 }
 
 .dark {
   color-scheme: dark;
-  background: #111214;
-  color: rgb(226, 232, 240);
 
+  --shadow-rgb: 0, 0, 0;
   --overlay-rgb: 255, 255, 255;
   --text-rgb: 226, 232, 240;
   --text-default-alpha: 0.82;
@@ -182,8 +204,6 @@
 
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
   --primary: oklch(0.922 0 0);
@@ -191,24 +211,10 @@
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
 }

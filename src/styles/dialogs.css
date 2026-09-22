@@ -33,12 +33,12 @@
   border: 1px solid rgba(var(--overlay-rgb),0.1);
   border-radius: 1.35rem;
   background: rgba(var(--surface-strong-rgb),0.96);
-  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+  box-shadow: 0 16px 40px rgba(var(--shadow-rgb), 0.12);
   padding: 1.45rem 1.35rem;
 }
 
 .dark .ai-dialog__panel {
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.42);
+  box-shadow: 0 24px 60px rgba(var(--shadow-rgb), 0.42);
 }
 
 .ai-dialog__panel--rewrite {
@@ -86,8 +86,13 @@
      grows past its max-height instead of scrolling. */
   min-height: 0;
   overflow-y: auto;
-  /* Room for the scrollbar, taken back off the margin so the controls do not
-     shift sideways when it appears. */
+  /* overflow-y: auto alone makes the UA treat overflow-x as auto too, which
+     clips a focused control's box-shadow ring against this edge. A little
+     padding gives the ring room; the matching negative margin keeps the
+     rows themselves flush with the panel like before. Same trick as the
+     right side, which already does this for the scrollbar. */
+  padding-left: 0.3rem;
+  margin-left: -0.3rem;
   padding-right: 0.6rem;
   margin-right: -0.6rem;
 }
@@ -413,7 +418,7 @@
 }
 
 .ai-dialog__model-hint--error {
-  color: rgba(248, 113, 113, 0.9);
+  color: rgba(var(--error-soft-rgb), 0.9);
 }
 
 .ai-dialog__notice {
@@ -661,7 +666,7 @@
 }
 
 .shortcuts-hint--error {
-  color: var(--destructive-fg, #dc2626);
+  color: rgb(var(--error-strong-rgb));
 }
 
 .shortcuts-section + .shortcuts-section {
@@ -775,11 +780,11 @@
   border-radius: 1.25rem;
   background: rgba(var(--surface-strong-rgb),0.96);
   padding: 1.25rem;
-  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+  box-shadow: 0 16px 40px rgba(var(--shadow-rgb), 0.12);
 }
 
 .dark .unsaved-dialog__panel {
-  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 28px 80px rgba(var(--shadow-rgb), 0.45);
 }
 
 .unsaved-dialog__eyebrow {
@@ -918,7 +923,7 @@
 .export-dialog__error {
   margin-top: 0.9rem;
   font-size: 0.85rem;
-  color: #dc2626;
+  color: rgb(var(--error-strong-rgb));
   overflow-wrap: anywhere;
 }
 
@@ -959,11 +964,11 @@
 }
 
 .import-dialog__icon--done {
-  color: #16a34a;
+  color: rgb(var(--success-strong-rgb));
 }
 
 .import-dialog__icon--error {
-  color: #dc2626;
+  color: rgb(var(--error-strong-rgb));
 }
 
 .import-dialog__icon--cancelled {
@@ -990,7 +995,7 @@
   flex: 1;
   min-width: 0;
   font-size: 0.8rem;
-  color: #dc2626;
+  color: rgb(var(--error-strong-rgb));
   overflow-wrap: anywhere;
 }
 
@@ -1306,4 +1311,369 @@
 
 .device-list .ai-dialog__error {
   margin-top: 0.5rem;
+}
+
+/* Theme builder (ThemeBuilderDialog.tsx): fields on the left, the preview
+   (theme-preview.css) on the right and sticky while the fields scroll. Like
+   the settings panel, only the body scrolls, so the actions stay put. */
+.ai-dialog__panel--theme-builder {
+  display: flex;
+  flex-direction: column;
+  width: min(70rem, 100%);
+  overflow: hidden;
+}
+
+.ai-dialog__panel--theme-builder > h3,
+.ai-dialog__panel--theme-builder > .theme-builder__intro,
+.ai-dialog__panel--theme-builder > .theme-builder__notice,
+.ai-dialog__panel--theme-builder > .theme-builder__actions {
+  flex: 0 0 auto;
+}
+
+.theme-builder__intro {
+  margin: 0.35rem 0 0.9rem;
+  color: var(--dialog-intro);
+  font-size: var(--dialog-intro-size);
+}
+
+.theme-builder__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  align-items: start;
+  gap: 1.4rem;
+  padding-right: 0.6rem;
+  margin-right: -0.6rem;
+}
+
+.theme-builder__form {
+  display: grid;
+  gap: 0.7rem;
+  min-width: 0;
+}
+
+.theme-builder__preview {
+  position: sticky;
+  top: 0;
+  display: grid;
+  gap: 0.6rem;
+  min-width: 0;
+}
+
+.theme-builder__preview-options {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+/* Normal / Paper / Zen: a small segmented switch over the preview. */
+.theme-builder__view-switch {
+  display: inline-flex;
+  border: 1px solid rgba(var(--overlay-rgb), 0.12);
+  border-radius: 0.6rem;
+  padding: 0.15rem;
+  gap: 0.15rem;
+}
+
+.theme-builder__view-switch button {
+  border: none;
+  border-radius: 0.45rem;
+  background: transparent;
+  color: var(--dialog-label);
+  padding: 0.25rem 0.7rem;
+  font: inherit;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.theme-builder__view-switch button:hover:not(:disabled) {
+  background: rgba(var(--surface-hover-rgb), 0.92);
+}
+
+.theme-builder__view-switch button[aria-pressed="true"] {
+  background: rgba(var(--selection-rgb), 0.2);
+  color: rgb(var(--text-rgb));
+  font-weight: 600;
+}
+
+.theme-builder__view-switch button:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.theme-builder__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(8rem, 0.5fr);
+  gap: 0.7rem;
+}
+
+.theme-builder__form .ai-dialog__field input:disabled,
+.theme-builder__form .ai-dialog__field select:disabled {
+  opacity: 0.6;
+}
+
+.theme-builder__hint {
+  margin: -0.3rem 0 0;
+  color: var(--dialog-hint);
+  font-size: var(--dialog-hint-size);
+}
+
+.theme-builder__section-title {
+  margin-top: 0.4rem;
+  color: var(--dialog-heading);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.theme-builder__group-title {
+  margin: 0.6rem 0 0.35rem;
+  color: var(--dialog-label);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.theme-builder__colors {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.theme-builder__color {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.theme-builder__color-label {
+  display: grid;
+  min-width: 0;
+  color: var(--dialog-label);
+  font-size: var(--dialog-label-size);
+}
+
+.theme-builder__color-label small {
+  color: var(--dialog-hint);
+  font-size: var(--dialog-hint-size);
+}
+
+.theme-builder__color-inputs {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.theme-builder__swatch {
+  width: 2.2rem;
+  height: 2.2rem;
+  flex-shrink: 0;
+  border: 1px solid rgba(var(--overlay-rgb), 0.1);
+  border-radius: 0.55rem;
+  background: rgba(var(--surface-raised-rgb), 0.84);
+  padding: 0.12rem;
+  cursor: pointer;
+}
+
+.theme-builder__hex {
+  width: 6.2rem;
+  border: 1px solid rgba(var(--overlay-rgb), 0.1);
+  border-radius: 0.7rem;
+  background: rgba(var(--surface-raised-rgb), 0.84);
+  padding: 0.45rem 0.6rem;
+  color: inherit;
+  font: inherit;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.85rem;
+}
+
+.theme-builder__hex:focus {
+  outline: none;
+  border-color: rgba(var(--overlay-rgb), 0.24);
+  box-shadow: 0 0 0 3px rgba(var(--overlay-rgb), 0.08);
+}
+
+/* A template's colours are read-only but still the colours: no dimming on
+   the swatch, only on the text next to it. */
+.theme-builder__swatch:disabled {
+  cursor: default;
+}
+
+.theme-builder__hex:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.theme-builder__reset.ai-dialog__model-refresh,
+.theme-builder__reset-placeholder {
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+}
+
+.theme-builder__advanced-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  width: fit-content;
+  margin-top: 0.4rem;
+  border: none;
+  background: transparent;
+  color: var(--dialog-heading);
+  padding: 0;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.theme-builder__advanced-toggle svg {
+  transform: rotate(-90deg);
+  transition: transform 0.15s ease;
+}
+
+.theme-builder__advanced-toggle svg.theme-builder__chevron--open {
+  transform: none;
+}
+
+.theme-builder__advanced {
+  display: grid;
+  gap: 0.2rem;
+  border-left: 2px solid rgba(var(--overlay-rgb), 0.1);
+  padding-left: 0.8rem;
+}
+
+.theme-builder__advanced .theme-builder__hint {
+  margin: 0;
+}
+
+.theme-builder__transfer {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+  border-top: 1px solid rgba(var(--overlay-rgb), 0.1);
+  padding-top: 0.8rem;
+}
+
+.theme-builder__transfer .theme-builder__section-title {
+  margin-top: 0;
+}
+
+.theme-builder__transfer .theme-builder__hint {
+  margin: 0;
+}
+
+.theme-builder__transfer-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.theme-builder__paste {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.theme-builder__paste textarea {
+  min-height: 6rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+}
+
+.theme-builder__paste-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.4rem;
+}
+
+.theme-builder__notice {
+  margin: 0.7rem 0 0;
+  font-size: 0.85rem;
+}
+
+.theme-builder__notice--info {
+  color: var(--success-fg);
+}
+
+.theme-builder__notice--error {
+  color: var(--error-fg);
+}
+
+.theme-builder__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+  border-top: 1px solid rgba(var(--overlay-rgb), 0.1);
+  padding-top: 0.9rem;
+}
+
+.theme-builder__actions-spacer {
+  flex: 1 1 auto;
+}
+
+.theme-builder__dirty {
+  color: var(--amber-fg);
+  font-size: 0.82rem;
+}
+
+/* "View in app": the dialog steps aside for a small bar, so the theme can
+   be judged on the real window and the real document. */
+.theme-builder__app-view {
+  position: fixed;
+  z-index: 70;
+  left: 50%;
+  bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  max-width: calc(100vw - 2rem);
+  transform: translateX(-50%);
+  border: 1px solid rgba(var(--overlay-rgb), 0.14);
+  border-radius: 0.95rem;
+  background: rgba(var(--surface-strong-rgb), 0.97);
+  box-shadow: 0 12px 32px rgba(var(--shadow-rgb), 0.14);
+  padding: 0.55rem 0.6rem 0.55rem 1rem;
+  font-size: 0.9rem;
+}
+
+.dark .theme-builder__app-view {
+  box-shadow: 0 20px 48px rgba(var(--shadow-rgb), 0.45);
+}
+
+/* Narrow windows and phones: one column, the preview on top. It stays in
+   view while the fields scroll underneath, capped so the fields keep room. */
+@media (max-width: 860px) {
+  /* A flex column rather than a one-column grid: the capped, scrolling
+     preview contributes no minimum height to a grid row, which let the
+     fields slide in underneath it. */
+  .theme-builder__body {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .theme-builder__body > * {
+    flex-shrink: 0;
+  }
+
+  .theme-builder__preview {
+    order: -1;
+    z-index: 1;
+    max-height: 42vh;
+    overflow-y: auto;
+    background: rgba(var(--surface-strong-rgb), 0.98);
+    padding-bottom: 0.5rem;
+  }
+
+  .theme-builder__row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .theme-builder__actions-spacer {
+    display: none;
+  }
 }

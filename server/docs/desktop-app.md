@@ -106,4 +106,6 @@ version history, the agent's proposals and checkpoints, chat sessions). The
 desktop app keeps on your computer what is about the app rather than the
 vault: the list of servers, the AI settings and API keys, the theme and
 language, keyboard shortcuts, the Whisper model. Two desktop apps on two
-computers therefore share the notes but not the settings.
+computers therefore share the notes but not the settings. Custom colour
+themes move by export and import in the theme builder (see the
+[FAQ](faq.md#the-desktop-app)).

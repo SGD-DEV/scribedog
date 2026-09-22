@@ -85,6 +85,16 @@ Yes, and each sees the other's changes live. Just do not type in the same
 note in both at the same time: there is no locking, and the later save wins.
 See [Your data and backups](data-and-backups.md).
 
+**How do I get my colour theme from the browser into the desktop app?**
+Custom themes (Settings → Appearance → theme builder) are stored in the
+browser, not on the server, so another browser or the desktop app does not
+have them yet. Open the theme in the theme builder and export it, as a file
+(the browser downloads a small `.scribedog-theme.json`) or to the clipboard.
+In the desktop app, open the theme builder and import the file or paste it.
+The same way works between two browsers. Clearing the browser's site data
+deletes the themes stored there, so keep an exported copy of the ones you
+care about.
+
 ## Notes and data
 
 **Where are my notes?**

@@ -8,6 +8,7 @@ import { ImportDialog } from "@/components/ImportDialog";
 import { MoveToDialog, type MoveRequest } from "@/components/MoveToDialog";
 import { SaveConflictDialog } from "@/components/SaveConflictDialog";
 import { SettingsDialog, type SettingsTab } from "@/components/SettingsDialog";
+import { ThemeBuilderDialog } from "@/components/ThemeBuilderDialog";
 import { UnsavedChangesDialog } from "@/components/UnsavedChangesDialog";
 import { UpdateNotification } from "@/components/UpdateNotification";
 import { VersionDiffDialog, type VersionDiffTarget } from "@/components/VersionDiffDialog";
@@ -37,6 +38,11 @@ type AppDialogsProps = {
   onSaveSettings: (nextSettings: Partial<AiSettings>) => void;
   onCloseSettings: () => void;
   onAssistantEditRequest: (assistant: Assistant | null) => void;
+  onThemeBuilderRequest: () => void;
+
+  // Theme builder
+  isThemeBuilderOpen: boolean;
+  onCloseThemeBuilder: () => void;
 
   // Assistant edit
   assistantEditTarget: { assistant: Assistant | null } | null;
@@ -99,6 +105,9 @@ export function AppDialogs({
   onSaveSettings,
   onCloseSettings,
   onAssistantEditRequest,
+  onThemeBuilderRequest,
+  isThemeBuilderOpen,
+  onCloseThemeBuilder,
   assistantEditTarget,
   onCloseAssistantEdit,
   moveRequest,
@@ -160,7 +169,10 @@ export function AppDialogs({
         }}
         onClose={onCloseSettings}
         onAssistantEditRequest={onAssistantEditRequest}
+        onThemeBuilderRequest={onThemeBuilderRequest}
       />
+
+      <ThemeBuilderDialog open={isThemeBuilderOpen} onClose={onCloseThemeBuilder} />
 
       <AssistantEditDialog
         open={assistantEditTarget !== null}

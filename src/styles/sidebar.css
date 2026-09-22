@@ -156,7 +156,7 @@
 
 .sidebar-panel__message--error {
   border-style: solid;
-  border-color: rgba(248, 113, 113, 0.35);
+  border-color: rgba(var(--error-soft-rgb), 0.35);
   color: var(--error-fg);
 }
 

@@ -300,7 +300,7 @@
   border: 1px solid rgba(var(--overlay-rgb), 0.12);
   border-radius: 0.75rem;
   background: rgba(var(--surface-rgb), 0.98);
-  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.14);
+  box-shadow: 0 12px 32px rgba(var(--shadow-rgb), 0.14);
   padding: 0.7rem 0.85rem;
   color: rgba(var(--text-rgb), 0.86);
   font-size: 0.8rem;
@@ -308,7 +308,7 @@
 }
 
 .dark .info-popover {
-  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 20px 48px rgba(var(--shadow-rgb), 0.45);
 }
 
 .info-popover__link {

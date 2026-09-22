@@ -161,10 +161,15 @@
   background: rgba(var(--selection-rgb), 0.14);
 }
 
-/* Same marker as the open note in the tree (file-tree.css --active). */
-.working-set__row--active {
-  background: rgba(var(--surface-active-rgb), 0.96);
+/* Same marker as the open note in the tree (file-tree.css --active, and the
+   bold name from find.css), so one note never looks two ways at once. */
+.working-set__row.working-set__row--active {
+  background: rgba(var(--selection-rgb), 0.2);
   box-shadow: inset 3px 0 0 rgba(var(--accent-rgb), 0.85);
+}
+
+.working-set__row--active .working-set__name {
+  font-weight: 600;
 }
 
 .working-set__text {

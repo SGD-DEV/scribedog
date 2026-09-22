@@ -1,29 +1,73 @@
 import { useEffect, useState } from "react";
-import { RotateCcw } from "lucide-react";
+import { Palette, RotateCcw } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { SettingRow } from "@/components/settings/SettingRow";
+import { Button } from "@/components/ui/button";
 import { isValidHexColor } from "@/lib/color";
+import { findPresetTheme, PRESET_THEMES } from "@/lib/theme/presets";
 import { OUTLINE_DEPTH_MAX, OUTLINE_DEPTH_MIN } from "@/lib/editor/documentOutline";
 import { DEFAULT_ACCENT_COLOR, useAccentColorStore } from "@/store/useAccentColorStore";
 import { useEditorSettingsStore } from "@/store/useEditorSettingsStore";
-import { type Theme, useThemeStore } from "@/store/useThemeStore";
+import {
+  customThemeIdOf,
+  customThemeKey,
+  presetThemeIdOf,
+  presetThemeKey,
+  type Theme,
+  useThemeStore
+} from "@/store/useThemeStore";
+
+type AppearanceSettingsProps = {
+  /** Opens the theme builder (settings close while it is open). */
+  onThemeBuilderRequest: () => void;
+};
 
 /**
  * Theme, paper surface, accent colour and outline depth. All of them apply
- * through their own stores the moment they change.
+ * through their own stores the moment they change. A custom theme brings its
+ * own accent colour; while one is active, the accent field edits that
+ * theme's accent instead of the app-wide setting. A shipped template is
+ * read-only, so with one active the field shows its accent and is locked.
  */
-export function AppearanceSettings() {
+export function AppearanceSettings({ onThemeBuilderRequest }: AppearanceSettingsProps) {
   const { t } = useTranslation();
   const theme = useThemeStore((state) => state.theme);
   const setTheme = useThemeStore((state) => state.setTheme);
+  const customThemes = useThemeStore((state) => state.customThemes);
+  const saveCustomTheme = useThemeStore((state) => state.saveCustomTheme);
+  const activeCustomId = customThemeIdOf(theme);
+  const activeCustomTheme = customThemes.find((entry) => entry.id === activeCustomId) ?? null;
+  const activePresetId = presetThemeIdOf(theme);
+  const activePreset = activePresetId ? findPresetTheme(activePresetId) : null;
+  const presetName = (id: string) =>
+    t(`themeBuilder.presets.${id}`, { defaultValue: findPresetTheme(id)?.name ?? id });
   const paperSurface = useEditorSettingsStore((state) => state.paperSurface);
   const setPaperSurface = useEditorSettingsStore((state) => state.setPaperSurface);
   const outlineMaxDepth = useEditorSettingsStore((state) => state.outlineMaxDepth);
   const setOutlineMaxDepth = useEditorSettingsStore((state) => state.setOutlineMaxDepth);
-  const accentColor = useAccentColorStore((state) => state.accentColor);
-  const setAccentColor = useAccentColorStore((state) => state.setAccentColor);
-  const resetAccentColor = useAccentColorStore((state) => state.resetAccentColor);
+  const settingAccentColor = useAccentColorStore((state) => state.accentColor);
+  const setSettingAccentColor = useAccentColorStore((state) => state.setAccentColor);
+  const resetSettingAccentColor = useAccentColorStore((state) => state.resetAccentColor);
+
+  const accentColor = activePreset
+    ? activePreset.base.accent
+    : activeCustomTheme
+      ? activeCustomTheme.base.accent
+      : settingAccentColor;
+  const accentLocked = activePreset !== null;
+  const setAccentColor = (color: string) => {
+    if (!isValidHexColor(color)) {
+      return;
+    }
+    if (activeCustomTheme) {
+      saveCustomTheme({ ...activeCustomTheme, base: { ...activeCustomTheme.base, accent: color.toLowerCase() } });
+    } else {
+      setSettingAccentColor(color);
+    }
+  };
+  const resetAccentColor = () =>
+    activeCustomTheme ? setAccentColor(DEFAULT_ACCENT_COLOR) : resetSettingAccentColor();
   const [accentColorInput, setAccentColorInput] = useState(accentColor);
 
   useEffect(() => {
@@ -37,12 +81,43 @@ export function AppearanceSettings() {
           <option value="system">{t("settingsDialog.themeSystem")}</option>
           <option value="light">{t("settingsDialog.themeLight")}</option>
           <option value="dark">{t("settingsDialog.themeDark")}</option>
+          {PRESET_THEMES.map((preset) => (
+            <option key={preset.id} value={presetThemeKey(preset.id)}>
+              {presetName(preset.id)}
+            </option>
+          ))}
+          {customThemes.length > 0 ? (
+            <optgroup label={t("settingsDialog.themeCustomGroup")}>
+              {customThemes.map((entry) => (
+                <option key={entry.id} value={customThemeKey(entry.id)}>
+                  {entry.name}
+                </option>
+              ))}
+            </optgroup>
+          ) : null}
         </select>
       </SettingRow>
 
       <SettingRow
+        label={t("settingsDialog.themeBuilder")}
+        hint={t("settingsDialog.themeBuilderShort")}
+        info={t("settingsDialog.themeBuilderHint")}
+      >
+        <Button type="button" variant="outline" onClick={onThemeBuilderRequest}>
+          <Palette />
+          {t("settingsDialog.themeBuilderOpen")}
+        </Button>
+      </SettingRow>
+
+      <SettingRow
         label={t("settingsDialog.accentColor")}
-        hint={t("settingsDialog.accentColorShort")}
+        hint={
+          activePreset
+            ? t("settingsDialog.accentColorPresetShort", { name: presetName(activePreset.id) })
+            : activeCustomTheme
+              ? t("settingsDialog.accentColorThemeShort", { name: activeCustomTheme.name })
+              : t("settingsDialog.accentColorShort")
+        }
         info={t("settingsDialog.accentColorHint")}
       >
         {({ id, describedBy }) => (
@@ -52,6 +127,7 @@ export function AppearanceSettings() {
               type="color"
               className="accent-color-setting__swatch"
               value={accentColor}
+              disabled={accentLocked}
               onChange={(event) => setAccentColor(event.target.value)}
               aria-describedby={describedBy}
             />
@@ -59,6 +135,7 @@ export function AppearanceSettings() {
               type="text"
               className="accent-color-setting__hex"
               value={accentColorInput}
+              disabled={accentLocked}
               onChange={(event) => {
                 const nextValue = event.target.value;
                 setAccentColorInput(nextValue);
@@ -75,7 +152,7 @@ export function AppearanceSettings() {
               type="button"
               className="ai-dialog__model-refresh"
               onClick={resetAccentColor}
-              disabled={accentColor.toLowerCase() === DEFAULT_ACCENT_COLOR}
+              disabled={accentLocked || accentColor.toLowerCase() === DEFAULT_ACCENT_COLOR}
               aria-label={t("settingsDialog.accentColorReset")}
               title={t("settingsDialog.accentColorReset")}
             >

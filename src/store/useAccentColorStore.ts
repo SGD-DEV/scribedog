@@ -34,7 +34,7 @@ function persistAccentColor(color: string): void {
   }
 }
 
-function applyAccentColor(color: string): void {
+export function applyAccentColor(color: string): void {
   const palette = buildAccentPalette(color);
   if (!palette) {
     return;
