@@ -3,6 +3,16 @@
 All notable changes to ScribeDog are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.16.0] - 2026-09-22
+
+### Highlights
+- Add theme builder for custom themes, added four new built-in themes: Sepia, Fjord, Fireside, and Midnight
+- Support Pandoc's {.unlisted} heading attribute
+- Add touch buttons to insert a line above/below an image
+
+### Bug Fixes
+- Keep h4-h6 at body size in editor, export, and print
+
 ## [0.15.1] - 2026-09-22
 
 ### Bug Fixes
