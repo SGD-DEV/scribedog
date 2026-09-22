@@ -22,10 +22,15 @@ const documentCss = (fontStack: string, baseSizePx: number) => `
   /* Manuscript chapter breaks: invisible on screen, a real page break in
      print/PDF — an HTML file has no pages of its own. */
   .page-break { break-before: page; page-break-before: always; height: 0; }
-  h1, h2, h3, h4, h5, h6 { line-height: 1.25; margin: 1.6em 0 0.6em; }
+  h1, h2, h3, h4, h5, h6 { line-height: 1.25; margin: 1.6em 0 0.4em; }
   h1 { font-size: 2em; border-bottom: 1px solid #d1d9e0; padding-bottom: 0.3em; }
   h2 { font-size: 1.5em; border-bottom: 1px solid #d1d9e0; padding-bottom: 0.3em; }
   h3 { font-size: 1.25em; }
+  /* h4-h6 stay at body size (the browser default below it is a UA-stylesheet
+     leftover, not a deliberate choice) and step down through weight/color
+     instead, matching the in-app editor (editor-content.css). */
+  h4, h5, h6 { font-size: 1em; font-weight: 600; }
+  h6 { color: #57606a; }
   p { margin: 0.75em 0; }
   a { color: #0969da; }
   img { max-width: 100%; height: auto; }
