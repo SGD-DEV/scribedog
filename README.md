@@ -262,10 +262,13 @@ ScribeDog stores everything as plain `.md` files in a normal folder — so makin
 
 ### 🎨 Comfortable to use
 - Light and dark theme, plus an optional paper-white page inside the dark UI for judging long or layout-heavy documents
-- Four more built-in themes next to Light and Dark: a warm Sepia for long writing sessions, the cool dark Fjord, the warm dark Fireside and Midnight in true black for OLED screens
-- Your own colour themes: the theme builder (*Settings → Appearance*) starts from any of the built-in themes, and you pick a handful of base colours (background, surface, text, muted text, chrome, accent) while hover, selection, borders and shadows follow on their own. A live preview shows every colour before you use the theme, including the paper sheet and Zen mode, which can get a background and text colour of their own. An *Advanced* section covers status, highlight, diff and code colours. Themes can be exported and imported as a small JSON file or through the clipboard
 
   <img src="src/assets/scribe-dog-light-theme.png" alt="ScribeDog light theme" width="700">
+
+- Four more built-in themes next to Light and Dark: a warm Sepia for long writing sessions, the cool dark Fjord, the warm dark Fireside and Midnight in true black for OLED screens
+- Your own colour themes: the **theme builder** (*Settings → Appearance*) starts from any of the built-in themes, and you pick a handful of base colours (background, surface, text, muted text, chrome, accent) while hover, selection, borders and shadows follow on their own. A live preview shows every colour before you use the theme, including the paper sheet and Zen mode, which can get a background and text colour of their own. An *Advanced* section covers status, highlight, diff and code colours. Themes can be exported and imported as a small JSON file or through the clipboard
+
+  <img src="src/assets/scribe-dog-themebuilder.png" alt="ScribeDog light theme" width="700">
 
 - Interface available in **10 languages** — English, German, Spanish, French, Italian, Portuguese, Russian, Ukrainian, Japanese, and Chinese
 - One-click formatting toolbar with active-state highlighting
