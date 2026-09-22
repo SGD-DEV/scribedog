@@ -44,12 +44,13 @@ function buildDecorations(
   settings: HeadingNumberingSettings,
   activeHeadingPos: number
 ): DecorationSet {
-  if (!settings.enabled) {
-    return DecorationSet.empty;
-  }
-
   const headings = collectHeadings(doc);
-  const numbers = settings.scope === "everywhere" ? computeHeadingNumbers(headings, settings) : null;
+  // The numbers follow the setting; dimming the marker does not. `{.unlisted}`
+  // keeps a heading out of the outline whether or not anything is numbered,
+  // so leaving its marker painted as ordinary title text only while numbering
+  // is off would show the one thing the marker is not.
+  const numbers =
+    settings.enabled && settings.scope === "everywhere" ? computeHeadingNumbers(headings, settings) : null;
   const decorations: Decoration[] = [];
 
   headings.forEach((heading, index) => {

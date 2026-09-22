@@ -54,34 +54,66 @@ export function normalizeHeadingNumberingSettings(raw: unknown): HeadingNumberin
 }
 
 // Pandoc's way of opting a heading out: a trailing attribute block that holds
-// the bare `-` or the `.unnumbered` class, e.g. "# Preface {-}" or
-// "# Preface {#pre .unnumbered}". Only that block is recognised (and hidden);
-// any other attribute block stays visible text, as it did before.
+// the bare `-` or one of the classes `.unnumbered` / `.unlisted`, e.g.
+// "# Preface {-}", "# Preface {#pre .unnumbered}" or
+// "# Aside {.unnumbered .unlisted}". The two classes are independent:
+// `.unnumbered` drops the number, `.unlisted` keeps the heading out of the
+// outline, and Pandoc's `{-}` shorthand means the first of them. Only a block
+// carrying at least one of those stays recognised (and hidden); any other
+// attribute block stays visible text, as it did before.
 const TRAILING_ATTRIBUTES = /\s*\{([^{}]*)\}\s*$/;
 
+/** What a heading's trailing attribute block opts it out of. */
+export type HeadingMarkerFlags = {
+  /** `{-}` or `.unnumbered`: the heading gets no automatic number. */
+  unnumbered: boolean;
+  /** `.unlisted`: the heading is left out of the outline. */
+  unlisted: boolean;
+};
+
+const NO_MARKER: HeadingMarkerFlags = { unnumbered: false, unlisted: false };
+
 /**
- * Where the unnumbered marker sits in `text`, as a character offset of its
- * first char (the whitespace before it included), or -1 when there is none.
+ * The flags in `text`'s trailing attribute block, and where that block
+ * starts (its leading whitespace included), or `start: -1` when the heading
+ * carries no block this module recognises.
  */
-export function findUnnumberedMarker(text: string): number {
+export function readHeadingMarker(text: string): HeadingMarkerFlags & { start: number } {
   const match = TRAILING_ATTRIBUTES.exec(text);
 
   if (!match) {
-    return -1;
+    return { ...NO_MARKER, start: -1 };
   }
 
   const attributes = match[1].trim().split(/\s+/);
-  return attributes.includes("-") || attributes.includes(".unnumbered") ? match.index : -1;
+  const unnumbered = attributes.includes("-") || attributes.includes(".unnumbered");
+  const unlisted = attributes.includes(".unlisted");
+
+  return unnumbered || unlisted
+    ? { unnumbered, unlisted, start: match.index }
+    : { ...NO_MARKER, start: -1 };
+}
+
+/**
+ * Where the marker sits in `text`, as a character offset of its first char
+ * (the whitespace before it included), or -1 when there is none.
+ */
+export function findUnnumberedMarker(text: string): number {
+  return readHeadingMarker(text).start;
 }
 
 export function isUnnumberedHeading(text: string): boolean {
-  return findUnnumberedMarker(text) !== -1;
+  return readHeadingMarker(text).unnumbered;
 }
 
-/** The heading title with the unnumbered marker removed, trimmed. */
+export function isUnlistedHeading(text: string): boolean {
+  return readHeadingMarker(text).unlisted;
+}
+
+/** The heading title with the marker removed, trimmed. */
 export function stripUnnumberedMarker(text: string): string {
-  const index = findUnnumberedMarker(text);
-  return (index === -1 ? text : text.slice(0, index)).trim();
+  const { start } = readHeadingMarker(text);
+  return (start === -1 ? text : text.slice(0, start)).trim();
 }
 
 export function formatHeadingNumber(counters: number[]): string {

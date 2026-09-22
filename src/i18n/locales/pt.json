@@ -227,7 +227,7 @@
     "headingNumberingScopeOutline": "Apenas estrutura",
     "headingNumberingMarker": "Mostrar o marcador de exclusão {-}",
     "headingNumberingMarkerShort": "Só muda a apresentação no editor; o marcador permanece na nota.",
-    "headingNumberingMarkerHint": "Um título que termina em {-} ou {.unnumbered} fica fora da numeração, juntamente com tudo o que está abaixo. Escreva o marcador no fim do texto do título; o editor reconhece-o e não o trata como parte do título.",
+    "headingNumberingMarkerHint": "Um título que termina em {-} ou {.unnumbered} fica fora da numeração, juntamente com tudo o que está abaixo. Escreva o marcador no fim do texto do título; o editor reconhece-o e não o trata como parte do título. Um título que termina em {.unlisted} permanece no texto mas fica fora da estrutura; os dois podem ser combinados como {.unnumbered .unlisted}.",
     "headingNumberingMarkerActiveLine": "Apenas no título ativo",
     "headingNumberingMarkerAlways": "Sempre",
     "vaultScopeTitle": "Pasta aberta: {{name}}",

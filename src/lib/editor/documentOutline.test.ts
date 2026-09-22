@@ -6,10 +6,23 @@ import {
   clampOutlineDepth,
   collectHeadings,
   filterHeadingsByDepth,
+  filterUnlistedHeadings,
   hasHeading,
   headingIndexAtViewportTop,
+  numberOutline,
   sameOutline
 } from "./documentOutline";
+import {
+  DEFAULT_HEADING_NUMBERING,
+  type HeadingNumberingSettings
+} from "./headingNumbers";
+
+const numbering = (overrides: Partial<HeadingNumberingSettings> = {}): HeadingNumberingSettings => ({
+  ...DEFAULT_HEADING_NUMBERING,
+  enabled: true,
+  startLevel: 1,
+  ...overrides
+});
 
 const schema = new Schema({
   nodes: {
@@ -104,6 +117,47 @@ describe("filterHeadingsByDepth", () => {
   it("drops headings deeper than the limit and keeps everything at 6", () => {
     expect(filterHeadingsByDepth(headings, 2).map((heading) => heading.title)).toEqual(["a", "c"]);
     expect(filterHeadingsByDepth(headings, 6)).toBe(headings);
+  });
+});
+
+describe("numberOutline / filterUnlistedHeadings", () => {
+  const outlineOf = (titles: [number, string][]) =>
+    titles.map(([level, title], index) => ({ pos: index * 4, level, title }));
+
+  it("records .unlisted and takes the marker out of the title", () => {
+    const result = numberOutline(outlineOf([[1, "Aside {.unnumbered .unlisted}"]]), numbering());
+
+    expect(result[0]).toMatchObject({ title: "Aside", unlisted: true });
+    expect(result[0].number).toBeUndefined();
+  });
+
+  it("still reads the marker while numbering is off", () => {
+    // `.unlisted` is about the panel, not the numbers, so switching numbering
+    // off may not leave the marker sitting in the title as plain text.
+    const result = numberOutline(outlineOf([[1, "Aside {.unlisted}"]]), numbering({ enabled: false }));
+
+    expect(result[0]).toMatchObject({ title: "Aside", unlisted: true });
+    expect(result[0].number).toBeUndefined();
+  });
+
+  it("drops unlisted headings but keeps them counting for the numbers", () => {
+    const numbered = numberOutline(
+      outlineOf([
+        [1, "One"],
+        [1, "Aside {.unlisted}"],
+        [1, "Three"]
+      ]),
+      numbering()
+    );
+
+    expect(numbered.map((heading) => heading.number)).toEqual(["1.", "2.", "3."]);
+    expect(filterUnlistedHeadings(numbered).map((heading) => heading.title)).toEqual(["One", "Three"]);
+  });
+
+  it("returns the same list when nothing is unlisted", () => {
+    const headings = outlineOf([[1, "One"]]);
+
+    expect(filterUnlistedHeadings(headings)).toBe(headings);
   });
 });
 

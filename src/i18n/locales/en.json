@@ -227,7 +227,7 @@
     "headingNumberingScopeOutline": "Outline only",
     "headingNumberingMarker": "Show the {-} skip marker",
     "headingNumberingMarkerShort": "Only its display in the editor changes; the marker stays in the note.",
-    "headingNumberingMarkerHint": "A heading ending in {-} or {.unnumbered} is left out of the numbering, together with everything below it. Write the marker at the end of the heading text; the editor recognises it and does not treat it as part of the title.",
+    "headingNumberingMarkerHint": "A heading ending in {-} or {.unnumbered} is left out of the numbering, together with everything below it. Write the marker at the end of the heading text; the editor recognises it and does not treat it as part of the title. A heading ending in {.unlisted} stays in the text but is left out of the outline; the two can be combined as {.unnumbered .unlisted}.",
     "headingNumberingMarkerActiveLine": "Only in the active heading",
     "headingNumberingMarkerAlways": "Always",
     "vaultScopeTitle": "Open folder: {{name}}",

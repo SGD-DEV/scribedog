@@ -2,6 +2,7 @@ import type { Node as ProseMirrorNode } from "@tiptap/pm/model";
 
 import {
   computeHeadingNumbers,
+  readHeadingMarker,
   stripUnnumberedMarker,
   type HeadingNumberingSettings
 } from "@/lib/editor/headingNumbers";
@@ -14,6 +15,8 @@ export type OutlineHeading = {
   title: string;
   /** Automatic number ("1.2.") once numberOutline ran; absent when it gets none. */
   number?: string;
+  /** `{.unlisted}`: kept out of the panel, still counted for the numbers. */
+  unlisted?: boolean;
 };
 
 export const OUTLINE_DEPTH_MIN = 1;
@@ -59,22 +62,49 @@ export function hasHeading(doc: ProseMirrorNode): boolean {
 }
 
 /**
- * Attaches the automatic numbers and hides the `{-}` marker from the titles.
- * Runs on the complete list, before any depth filter: a number depends on
- * every heading above it, listed or not. A no-op while numbering is off.
+ * Attaches the automatic numbers, records the `{.unlisted}` flag and hides
+ * the marker from the titles. Runs on the complete list, before any filter:
+ * a number depends on every heading above it, listed or not. The marker is
+ * read here because the title loses it in the same step; numbering being off
+ * only skips the numbers, never the flag.
  */
 export function numberOutline(headings: OutlineHeading[], settings: HeadingNumberingSettings): OutlineHeading[] {
-  if (!settings.enabled) {
-    return headings;
-  }
-
-  const numbers = computeHeadingNumbers(headings, settings);
+  const numbers = settings.enabled ? computeHeadingNumbers(headings, settings) : null;
 
   return headings.map((heading, index) => {
-    const number = numbers[index];
-    const title = stripUnnumberedMarker(heading.title);
-    return number === null ? { ...heading, title } : { ...heading, title, number };
+    const marker = readHeadingMarker(heading.title);
+
+    if (marker.start === -1 && numbers === null) {
+      return heading;
+    }
+
+    const next: OutlineHeading = { ...heading, title: stripUnnumberedMarker(heading.title) };
+    const number = numbers?.[index] ?? null;
+
+    if (number !== null) {
+      next.number = number;
+    }
+
+    if (marker.unlisted) {
+      next.unlisted = true;
+    }
+
+    return next;
   });
+}
+
+/**
+ * Drops the headings marked `{.unlisted}`, Pandoc's way of keeping one out
+ * of the generated table of contents while it stays in the text. Runs after
+ * numberOutline, never before: an unlisted heading still counts for the
+ * numbering of everything around it, it is only hidden from this list. Unlike
+ * the number, this does not depend on numbering being switched on — the
+ * marker is about the outline, not about the numbers.
+ */
+export function filterUnlistedHeadings(headings: OutlineHeading[]): OutlineHeading[] {
+  return headings.some((heading) => heading.unlisted)
+    ? headings.filter((heading) => !heading.unlisted)
+    : headings;
 }
 
 export function filterHeadingsByDepth(headings: OutlineHeading[], maxDepth: number): OutlineHeading[] {
@@ -136,7 +166,8 @@ export function sameOutline(a: OutlineHeading[], b: OutlineHeading[]): boolean {
       heading.pos === other.pos &&
       heading.level === other.level &&
       heading.title === other.title &&
-      heading.number === other.number
+      heading.number === other.number &&
+      heading.unlisted === other.unlisted
     );
   });
 }

@@ -227,7 +227,7 @@
     "headingNumberingScopeOutline": "Plan seulement",
     "headingNumberingMarker": "Afficher le marqueur d’exclusion {-}",
     "headingNumberingMarkerShort": "Seul son affichage dans l’éditeur change ; le marqueur reste dans la note.",
-    "headingNumberingMarkerHint": "Un titre qui se termine par {-} ou {.unnumbered} est exclu de la numérotation, avec tout ce qui se trouve en dessous. Écrivez le marqueur à la fin du texte du titre ; l’éditeur le reconnaît et ne le traite pas comme une partie du titre.",
+    "headingNumberingMarkerHint": "Un titre qui se termine par {-} ou {.unnumbered} est exclu de la numérotation, avec tout ce qui se trouve en dessous. Écrivez le marqueur à la fin du texte du titre ; l’éditeur le reconnaît et ne le traite pas comme une partie du titre. Un titre qui se termine par {.unlisted} reste dans le texte mais n’apparaît pas dans le plan ; les deux peuvent être combinés en {.unnumbered .unlisted}.",
     "headingNumberingMarkerActiveLine": "Seulement dans le titre actif",
     "headingNumberingMarkerAlways": "Toujours",
     "vaultScopeTitle": "Dossier ouvert : {{name}}",

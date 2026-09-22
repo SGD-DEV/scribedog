@@ -227,7 +227,7 @@
     "headingNumberingScopeOutline": "Solo esquema",
     "headingNumberingMarker": "Mostrar la marca de omisión {-}",
     "headingNumberingMarkerShort": "Solo cambia cómo se muestra en el editor; la marca permanece en la nota.",
-    "headingNumberingMarkerHint": "Un encabezado que termina en {-} o {.unnumbered} queda fuera de la numeración, junto con todo lo que hay debajo. Escribe la marca al final del texto del encabezado; el editor la reconoce y no la trata como parte del título.",
+    "headingNumberingMarkerHint": "Un encabezado que termina en {-} o {.unnumbered} queda fuera de la numeración, junto con todo lo que hay debajo. Escribe la marca al final del texto del encabezado; el editor la reconoce y no la trata como parte del título. Un encabezado que termina en {.unlisted} permanece en el texto pero queda fuera del esquema; ambos pueden combinarse como {.unnumbered .unlisted}.",
     "headingNumberingMarkerActiveLine": "Solo en el encabezado activo",
     "headingNumberingMarkerAlways": "Siempre",
     "vaultScopeTitle": "Carpeta abierta: {{name}}",

@@ -227,7 +227,7 @@
     "headingNumberingScopeOutline": "Solo struttura",
     "headingNumberingMarker": "Mostra il marcatore di esclusione {-}",
     "headingNumberingMarkerShort": "Cambia solo la visualizzazione nell’editor; il marcatore resta nella nota.",
-    "headingNumberingMarkerHint": "Un titolo che termina con {-} o {.unnumbered} viene escluso dalla numerazione, insieme a tutto ciò che sta sotto. Scrivi il marcatore alla fine del testo del titolo; l’editor lo riconosce e non lo tratta come parte del titolo.",
+    "headingNumberingMarkerHint": "Un titolo che termina con {-} o {.unnumbered} viene escluso dalla numerazione, insieme a tutto ciò che sta sotto. Scrivi il marcatore alla fine del testo del titolo; l’editor lo riconosce e non lo tratta come parte del titolo. Un titolo che termina con {.unlisted} resta nel testo ma non compare nella struttura; i due si possono combinare come {.unnumbered .unlisted}.",
     "headingNumberingMarkerActiveLine": "Solo nel titolo attivo",
     "headingNumberingMarkerAlways": "Sempre",
     "vaultScopeTitle": "Cartella aperta: {{name}}",

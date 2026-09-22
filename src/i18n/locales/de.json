@@ -227,7 +227,7 @@
     "headingNumberingScopeOutline": "Nur Gliederung",
     "headingNumberingMarker": "Auslass-Markierung {-} anzeigen",
     "headingNumberingMarkerShort": "Nur die Anzeige im Editor ändert sich; die Markierung bleibt in der Notiz.",
-    "headingNumberingMarkerHint": "Eine Überschrift, die auf {-} oder {.unnumbered} endet, wird bei der Nummerierung ausgelassen, samt allem darunter. Die Markierung kommt ans Ende des Überschriftentexts; der Editor erkennt sie und behandelt sie nicht als Teil des Titels.",
+    "headingNumberingMarkerHint": "Eine Überschrift, die auf {-} oder {.unnumbered} endet, wird bei der Nummerierung ausgelassen, samt allem darunter. Die Markierung kommt ans Ende des Überschriftentexts; der Editor erkennt sie und behandelt sie nicht als Teil des Titels. Eine Überschrift, die auf {.unlisted} endet, bleibt im Text, taucht aber nicht in der Gliederung auf; beides lässt sich als {.unnumbered .unlisted} kombinieren.",
     "headingNumberingMarkerActiveLine": "Nur in der aktiven Überschrift",
     "headingNumberingMarkerAlways": "Immer",
     "vaultScopeTitle": "Geöffneter Ordner: {{name}}",

@@ -34,6 +34,14 @@ describe("numberExportBlocks", () => {
     expect(headingTexts(numberExportBlocks(blocks, settings))).toEqual(["1. One", "Two", "1.1. Three bold"]);
   });
 
+  it("takes the marker out even while numbering is off", () => {
+    // The marker is editor syntax, never part of a title: whoever opens the
+    // PDF must not read "{.unlisted}" behind a heading.
+    const blocks = parseMarkdownToBlocks("# One {.unnumbered .unlisted}\n\n# Two\n");
+
+    expect(headingTexts(numberExportBlocks(blocks, { ...settings, enabled: false }))).toEqual(["One", "Two"]);
+  });
+
   it("returns the very same list while numbering is off or absent", () => {
     const blocks = parseMarkdownToBlocks("# One\n");
 

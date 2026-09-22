@@ -5,6 +5,7 @@ import {
   activeHeadingIndex,
   collectHeadings,
   filterHeadingsByDepth,
+  filterUnlistedHeadings,
   headingIndexAtViewportTop,
   numberOutline,
   sameOutline,
@@ -63,7 +64,7 @@ export function useDocumentOutline(editor: TipTapEditor | null): DocumentOutline
 
     const refreshHeadings = () => {
       const next = filterHeadingsByDepth(
-        numberOutline(collectHeadings(editor.state.doc), numbering),
+        filterUnlistedHeadings(numberOutline(collectHeadings(editor.state.doc), numbering)),
         maxDepth
       );
 

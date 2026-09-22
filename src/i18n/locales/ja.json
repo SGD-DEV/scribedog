@@ -226,7 +226,7 @@
     "headingNumberingScopeOutline": "アウトラインのみ",
     "headingNumberingMarker": "除外マーカー {-} の表示",
     "headingNumberingMarkerShort": "変わるのはエディターでの表示だけで、マーカーはノートに残ります。",
-    "headingNumberingMarkerHint": "{-} または {.unnumbered} で終わる見出しは、その下にあるものも含めて番号付けから除外されます。マーカーは見出しテキストの末尾に書きます。エディターはこれを認識し、タイトルの一部として扱いません。",
+    "headingNumberingMarkerHint": "{-} または {.unnumbered} で終わる見出しは、その下にあるものも含めて番号付けから除外されます。マーカーは見出しテキストの末尾に書きます。エディターはこれを認識し、タイトルの一部として扱いません。 {.unlisted} で終わる見出しは本文には残りますが、アウトラインには表示されません。{.unnumbered .unlisted} のように組み合わせることもできます。",
     "headingNumberingMarkerActiveLine": "アクティブな見出しのみ",
     "headingNumberingMarkerAlways": "常に表示",
     "vaultScopeTitle": "開いているフォルダー: {{name}}",

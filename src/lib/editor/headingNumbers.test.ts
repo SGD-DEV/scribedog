@@ -3,7 +3,10 @@ import { describe, expect, it } from "vitest";
 import {
   computeHeadingNumbers,
   findUnnumberedMarker,
+  isUnlistedHeading,
+  isUnnumberedHeading,
   normalizeHeadingNumberingSettings,
+  readHeadingMarker,
   stripUnnumberedMarker,
   type HeadingNumberingSettings
 } from "./headingNumbers";
@@ -75,10 +78,33 @@ describe("unnumbered marker", () => {
     expect(findUnnumberedMarker("Preface {-} more")).toBe(-1);
   });
 
+  it("reads .unlisted on its own and next to .unnumbered", () => {
+    expect(readHeadingMarker("Aside {.unlisted}")).toMatchObject({
+      start: 5,
+      unnumbered: false,
+      unlisted: true
+    });
+    expect(readHeadingMarker("Aside {.unnumbered .unlisted}")).toMatchObject({
+      start: 5,
+      unnumbered: true,
+      unlisted: true
+    });
+    expect(readHeadingMarker("Aside {#id}")).toMatchObject({ start: -1, unlisted: false });
+  });
+
+  it("keeps .unlisted out of the numbering decision", () => {
+    // Only listed-ness is opted out of, so the heading still takes a number
+    // and still counts for the ones after it.
+    expect(isUnlistedHeading("Aside {.unlisted}")).toBe(true);
+    expect(isUnnumberedHeading("Aside {.unlisted}")).toBe(false);
+    expect(computeHeadingNumbers([h(1, "A {.unlisted}"), h(1, "B")], on())).toEqual(["1.", "2."]);
+  });
+
   it("strips only the marker from the title", () => {
     expect(stripUnnumberedMarker("Preface {-}")).toBe("Preface");
     expect(stripUnnumberedMarker("Preface {#id}")).toBe("Preface {#id}");
     expect(stripUnnumberedMarker("Plain")).toBe("Plain");
+    expect(stripUnnumberedMarker("Aside {.unnumbered .unlisted}")).toBe("Aside");
   });
 });
 

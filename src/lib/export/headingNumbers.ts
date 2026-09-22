@@ -108,16 +108,14 @@ function rewriteBlocks(blocks: ExportBlock[], replacements: Map<HeadingBlock, He
 }
 
 /**
- * The block list with heading numbers written in, or the same list when
- * numbering is off. Headings are visited in document order across nested
+ * The block list with heading numbers written in and the `{-}` / `{.unlisted}`
+ * markers taken out. Headings are visited in document order across nested
  * blocks — the same walk collectHeadings does over the editor document, so
- * the export agrees with the editor.
+ * the export agrees with the editor. The numbers follow the setting; removing
+ * the marker does not, since it is the editor's syntax either way and must
+ * never be read as part of a title by whoever gets the PDF.
  */
 export function numberExportBlocks(blocks: ExportBlock[], settings: HeadingNumberingSettings | undefined): ExportBlock[] {
-  if (!settings?.enabled) {
-    return blocks;
-  }
-
   const headings: HeadingBlock[] = [];
   collectHeadingBlocks(blocks, headings);
 
@@ -126,7 +124,8 @@ export function numberExportBlocks(blocks: ExportBlock[], settings: HeadingNumbe
   }
 
   const titles = headings.map((heading) => ({ level: heading.level, title: runsText(heading.runs).trim() }));
-  const numbers = settings.scope === "everywhere" ? computeHeadingNumbers(titles, settings) : null;
+  const numbers =
+    settings?.enabled && settings.scope === "everywhere" ? computeHeadingNumbers(titles, settings) : null;
   const replacements = new Map<HeadingBlock, HeadingBlock>();
 
   headings.forEach((heading, index) => {
@@ -155,10 +154,6 @@ export function numberExportBlockLists(
   lists: ExportBlock[][],
   settings: HeadingNumberingSettings | undefined
 ): ExportBlock[][] {
-  if (!settings?.enabled) {
-    return lists;
-  }
-
   const numbered = numberExportBlocks(lists.flat(), settings);
   let offset = 0;
 

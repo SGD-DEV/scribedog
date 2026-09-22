@@ -226,7 +226,7 @@
     "headingNumberingScopeOutline": "仅大纲",
     "headingNumberingMarker": "显示排除标记 {-}",
     "headingNumberingMarkerShort": "只改变在编辑器中的显示方式；标记仍保留在笔记中。",
-    "headingNumberingMarkerHint": "以 {-} 或 {.unnumbered} 结尾的标题会连同其下的所有内容一起排除在编号之外。标记写在标题文本的末尾；编辑器会识别它，不会将其视为标题的一部分。",
+    "headingNumberingMarkerHint": "以 {-} 或 {.unnumbered} 结尾的标题会连同其下的所有内容一起排除在编号之外。标记写在标题文本的末尾；编辑器会识别它，不会将其视为标题的一部分。 以 {.unlisted} 结尾的标题会保留在正文中，但不会出现在大纲里；两者可以组合为 {.unnumbered .unlisted}。",
     "headingNumberingMarkerActiveLine": "仅在当前标题中",
     "headingNumberingMarkerAlways": "始终显示",
     "vaultScopeTitle": "打开的文件夹：{{name}}",
