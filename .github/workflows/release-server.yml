@@ -117,9 +117,15 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # Pushed without a tag: the output carries only a digest, and the merge
-      # job below is what gives those digests a name. Both registries are fed
-      # from this one build, so the two never diverge.
+      # Pushed to ghcr only, without a tag: the output carries just a digest,
+      # and the merge job below is what gives it a name. Docker Hub is not fed
+      # here too — with two --output targets on one push-by-digest build,
+      # buildx reports back only one of the two digests (found the hard way:
+      # it surfaced as "image.name: docker.io/..." while the ghcr half was
+      # silently missing, and the merge job below failed with ghcr's digest
+      # "not found" because it was never exported). The merge job instead
+      # mirrors the finished ghcr manifest list to Docker Hub, which needs
+      # only one digest per registry to begin with.
       - name: Build and push by digest
         id: build
         # A native build of both stages takes a few minutes; this is a
@@ -133,9 +139,7 @@ jobs:
           context: .
           file: server/Dockerfile
           platforms: ${{ matrix.platform }}
-          outputs: |
-            type=image,name=${{ env.GHCR_IMAGE }},push-by-digest=true,name-canonical=true,push=true
-            type=image,name=docker.io/${{ secrets.DOCKERHUB_USERNAME }}/scribedog-server,push-by-digest=true,name-canonical=true,push=true
+          outputs: type=image,name=${{ env.GHCR_IMAGE }},push-by-digest=true,name-canonical=true,push=true
           # Scoped per architecture: the two jobs would otherwise overwrite
           # each other's cache, since type=gha keys on the workflow alone.
           cache-from: type=gha,scope=server-${{ matrix.arch }}
@@ -195,11 +199,10 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Create manifest lists
+      - name: Create ghcr manifest list
         working-directory: /tmp/digests
         env:
           VERSION: ${{ needs.version.outputs.version }}
-          DOCKERHUB_IMAGE: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/scribedog-server
         run: |
           # One digest file per architecture; anything else means a build job
           # pushed something unexpected.
@@ -210,11 +213,22 @@ jobs:
             exit 1
           fi
 
-          for image in "$GHCR_IMAGE" "$DOCKERHUB_IMAGE"; do
-            docker buildx imagetools create \
-              --tag "${image}:${VERSION}" \
-              $(printf "${image}@sha256:%s " *)
-          done
+          docker buildx imagetools create \
+            --tag "${GHCR_IMAGE}:${VERSION}" \
+            $(printf "${GHCR_IMAGE}@sha256:%s " *)
+
+      # Docker Hub gets the same manifest list by reference rather than a
+      # second digest build (see the comment on "Build and push by digest"
+      # above for why): imagetools copies each platform's image as-is, so the
+      # two registries end up byte-identical.
+      - name: Mirror manifest list to Docker Hub
+        env:
+          VERSION: ${{ needs.version.outputs.version }}
+          DOCKERHUB_IMAGE: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/scribedog-server
+        run: |
+          docker buildx imagetools create \
+            --tag "${DOCKERHUB_IMAGE}:${VERSION}" \
+            "${GHCR_IMAGE}:${VERSION}"
 
       - name: Verify manifest lists
         env:
