@@ -8,6 +8,21 @@ name: Release server image
 # An operator pins one version, and an upgrade is a deliberate edit of the
 # compose file, which is also what makes the data-version downgrade check in
 # the server meaningful.
+#
+# Each architecture builds on a runner of its own architecture and pushes an
+# untagged image addressed only by digest; the merge job then joins those
+# digests into one manifest list under the version tag. The tag therefore
+# appears in the registry only once both halves are in, and it never points at
+# a half-published image.
+#
+# This replaces a single QEMU-emulated buildx run. Emulated arm64 was the one
+# recurring failure of this pipeline: `npm ci` in the web stage died with
+# "qemu: uncaught target signal 4 (Illegal instruction)", and the build then
+# sat on that layer until a timeout killed it — twice in a row on v0.16.0,
+# first attempt and retry, which is what the retry step could never fix,
+# because a layer aborted by a timeout never enters the cache. Building
+# natively removes the emulator, and with it the crash, the retry step and the
+# timeouts that went with it.
 on:
   push:
     tags:
@@ -19,21 +34,26 @@ on:
         required: true
 
 # A tag pushed twice starts a second build of the very same image tag, and the
-# two then race on the ghcr push — which is how the v0.14.1 run sat there for
-# 99 minutes before it was cancelled. Cancelling is safe here (unlike in
-# release.yml): the push is atomic over the digest, so an aborted run leaves
-# nothing half-published behind.
+# two then race on the registry push — which is how the v0.14.1 run sat there
+# for 99 minutes before it was cancelled. Cancelling is safe here (unlike in
+# release.yml): a build pushes by digest and the tag is only written by the
+# merge job at the very end, so an aborted run leaves nothing half-published
+# behind.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  GHCR_IMAGE: ghcr.io/${{ github.repository_owner }}/scribedog-server
+
 jobs:
-  image:
+  # Resolved once rather than per architecture: the two build jobs must agree
+  # on the version, and the manifest-versus-tag check should fail the run
+  # before any runner starts building.
+  version:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      # Pushing to ghcr.io as the repository itself; no secret needed for it.
-      packages: write
+    outputs:
+      version: ${{ steps.version.outputs.version }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -56,8 +76,30 @@ jobs:
 
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+  build:
+    needs: version
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest
+            # Used in artifact names, where a slash is not allowed.
+            arch: amd64
+          # arm64 is not an afterthought here: a Raspberry Pi is the typical
+          # box this runs on. Native arm runners are free for public
+          # repositories, which is what makes dropping QEMU possible.
+          - platform: linux/arm64
+            runner: ubuntu-24.04-arm
+            arch: arm64
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
+      # Pushing to ghcr.io as the repository itself; no secret needed for it.
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
 
       - name: Set up Buildx
         uses: docker/setup-buildx-action@v3
@@ -75,57 +117,124 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # Two attempts, because the arm64 half is emulated: QEMU occasionally
-      # dies with "uncaught target signal 4 (Illegal instruction)" inside
-      # `npm ci`, and the build then sits on that layer until someone cancels
-      # it (v0.15.0 sat for 25 minutes; the retry finished in 8). The crash is
-      # not reproducible — the same commit built cleanly on the next run — so
-      # a second attempt is the fix, not a workaround for something in the
-      # image. The first attempt's layers are in the gha cache by then, so the
-      # retry only redoes what actually failed.
-      #
-      # continue-on-error rather than a failure gate: the second step decides
-      # the job's outcome, and a first attempt that died must not colour the
-      # run red when the retry succeeds. That red is what used to leave a
-      # cancelled check on the release commit.
-      - name: Build and push
+      # Pushed without a tag: the output carries only a digest, and the merge
+      # job below is what gives those digests a name. Both registries are fed
+      # from this one build, so the two never diverge.
+      - name: Build and push by digest
         id: build
-        continue-on-error: true
-        # A QEMU crash does not fail the step, it wedges it: the layer never
-        # finishes and the build would sit there until the job's own 6h limit.
-        # Successful runs take 5-10 minutes, so 20 turns that wedge into a
-        # failure the retry below can act on.
-        timeout-minutes: 20
+        # A native build of both stages takes a few minutes; this is a
+        # backstop against a hung runner, not the 20 minutes the emulated
+        # build needed.
+        timeout-minutes: 30
         uses: docker/build-push-action@v6
         with:
           # The whole repository: the image needs the frontend under /src as
           # well as /server (see server/Dockerfile).
           context: .
           file: server/Dockerfile
-          # arm64 is not an afterthought here: a Raspberry Pi is the typical
-          # box this runs on.
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: |
-            ghcr.io/${{ github.repository_owner }}/scribedog-server:${{ steps.version.outputs.version }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/scribedog-server:${{ steps.version.outputs.version }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          platforms: ${{ matrix.platform }}
+          outputs: |
+            type=image,name=${{ env.GHCR_IMAGE }},push-by-digest=true,name-canonical=true,push=true
+            type=image,name=docker.io/${{ secrets.DOCKERHUB_USERNAME }}/scribedog-server,push-by-digest=true,name-canonical=true,push=true
+          # Scoped per architecture: the two jobs would otherwise overwrite
+          # each other's cache, since type=gha keys on the workflow alone.
+          cache-from: type=gha,scope=server-${{ matrix.arch }}
+          cache-to: type=gha,mode=max,scope=server-${{ matrix.arch }}
 
-      # Pushing the same tag twice is safe: the registry addresses the image by
-      # digest, so an identical rebuild replaces nothing and a failed attempt
-      # leaves nothing half-published behind.
-      - name: Build and push (retry)
-        if: steps.build.outcome == 'failure'
-        timeout-minutes: 20
-        uses: docker/build-push-action@v6
+      # The digest is the only thing the merge job needs from this runner, and
+      # an artifact is how it crosses the job boundary.
+      - name: Export digest
+        run: |
+          mkdir -p /tmp/digests
+          digest="${{ steps.build.outputs.digest }}"
+          if [ -z "$digest" ]; then
+            echo "Build produced no digest; nothing to hand to the merge job." >&2
+            exit 1
+          fi
+          touch "/tmp/digests/${digest#sha256:}"
+
+      - name: Upload digest
+        uses: actions/upload-artifact@v4
         with:
-          context: .
-          file: server/Dockerfile
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: |
-            ghcr.io/${{ github.repository_owner }}/scribedog-server:${{ steps.version.outputs.version }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/scribedog-server:${{ steps.version.outputs.version }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          name: digest-${{ matrix.arch }}
+          path: /tmp/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  # Writes the version tag, in both registries, pointing at a manifest list
+  # that holds both architectures. Runs only once both builds succeeded, so a
+  # failed architecture means no tag at all rather than a single-arch image
+  # under a name operators expect to be multi-arch.
+  merge:
+    needs: [version, build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Download digests
+        uses: actions/download-artifact@v4
+        with:
+          path: /tmp/digests
+          pattern: digest-*
+          merge-multiple: true
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to ghcr.io
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Create manifest lists
+        working-directory: /tmp/digests
+        env:
+          VERSION: ${{ needs.version.outputs.version }}
+          DOCKERHUB_IMAGE: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/scribedog-server
+        run: |
+          # One digest file per architecture; anything else means a build job
+          # pushed something unexpected.
+          count=$(ls -1 | wc -l)
+          if [ "$count" -ne 2 ]; then
+            echo "Expected 2 digests (amd64, arm64), found $count." >&2
+            ls -la >&2
+            exit 1
+          fi
+
+          for image in "$GHCR_IMAGE" "$DOCKERHUB_IMAGE"; do
+            docker buildx imagetools create \
+              --tag "${image}:${VERSION}" \
+              $(printf "${image}@sha256:%s " *)
+          done
+
+      - name: Verify manifest lists
+        env:
+          VERSION: ${{ needs.version.outputs.version }}
+          DOCKERHUB_IMAGE: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/scribedog-server
+        run: |
+          # A tag that resolves to a single architecture would only surface on
+          # an operator's Raspberry Pi, so it is checked here instead. Read as
+          # JSON rather than grepped: the index also lists attestation
+          # manifests, which carry architecture "unknown" and must not count.
+          for image in "$GHCR_IMAGE" "$DOCKERHUB_IMAGE"; do
+            echo "== ${image}:${VERSION}"
+            docker buildx imagetools inspect "${image}:${VERSION}"
+
+            archs=$(docker buildx imagetools inspect --raw "${image}:${VERSION}" \
+              | jq -r '[.manifests[].platform | select(.architecture != "unknown")
+                        | "\(.os)/\(.architecture)"] | sort | join(",")')
+
+            if [ "$archs" != "linux/amd64,linux/arm64" ]; then
+              echo "${image}:${VERSION} should carry linux/amd64 and linux/arm64, got: ${archs:-none}" >&2
+              exit 1
+            fi
+          done

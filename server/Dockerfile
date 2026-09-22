@@ -7,7 +7,12 @@
 # build context.
 
 # ---- web: the shared frontend, built for the browser -------------------------
-FROM node:24-alpine AS web
+# Pinned to the build platform: the output is plain JS, CSS and assets, which
+# are identical whatever the target architecture, so building this stage once
+# per target buys nothing. It is also the expensive one (npm ci plus the Vite
+# build were about six of the eight minutes of a healthy multi-arch run), and
+# under QEMU it was where `npm ci` died with "uncaught target signal 4".
+FROM --platform=$BUILDPLATFORM node:24-alpine AS web
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
