@@ -5,6 +5,7 @@ import { dirname, join } from "@/platform/paths";
 import { readFile } from "@/platform/vaultFs";
 import { NodeSelection } from "@tiptap/pm/state";
 import { NodeViewWrapper, type ReactNodeViewProps } from "@tiptap/react";
+import { Plus } from "lucide-react";
 
 import { EditorFileContext } from "@/lib/editorFileContext";
 import { ABSOLUTE_URL_PATTERN, guessImageMimeType } from "@/lib/fileSystem";
@@ -13,6 +14,9 @@ const MIN_IMAGE_WIDTH = 48;
 
 const RESIZE_HANDLES = ["nw", "ne", "sw", "se"] as const;
 type ResizeHandle = (typeof RESIZE_HANDLES)[number];
+
+const INSERT_SIDES = ["before", "after"] as const;
+type InsertSide = (typeof INSERT_SIDES)[number];
 
 export function ImageView({ node, editor, getPos, updateAttributes, selected }: ReactNodeViewProps) {
   const { t } = useTranslation();
@@ -138,6 +142,50 @@ export function ImageView({ node, editor, getPos, updateAttributes, selected }: 
     editor.view.dispatch(state.tr.setSelection(NodeSelection.create(state.doc, pos)));
   };
 
+  // Two images in a row have no text position between them. With a keyboard
+  // the selected image takes Enter (a new paragraph after it) and a click in
+  // the gap places the gap cursor, but on a phone neither works: a tap selects
+  // the image without raising the keyboard (see selectOnTouch), and the gap is
+  // a few pixels of margin nobody can hit with a finger. These buttons are the
+  // touch way to get a line above or below the image; the CSS shows them only
+  // for a coarse pointer. Focusing inside the click keeps it a user gesture,
+  // which is what lets Android raise the keyboard for the new line.
+  const insertLine = (side: InsertSide) => (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const pos = getPos();
+
+    if (pos === undefined) {
+      return;
+    }
+
+    const { doc } = editor.state;
+    const insertAt = side === "before" ? pos : pos + node.nodeSize;
+    const $insertAt = doc.resolve(insertAt);
+    const neighbour = side === "before" ? $insertAt.nodeBefore : $insertAt.nodeAfter;
+
+    // An empty paragraph already sitting there (e.g. the trailing one after
+    // the last image) is reused, so repeated taps don't stack blank lines.
+    if (neighbour?.type.name === "paragraph" && neighbour.content.size === 0) {
+      const caret = side === "before" ? insertAt - neighbour.nodeSize + 1 : insertAt + 1;
+      editor.chain().setTextSelection(caret).focus().run();
+      return;
+    }
+
+    editor
+      .chain()
+      .insertContentAt(insertAt, { type: "paragraph" })
+      .setTextSelection(insertAt + 1)
+      .focus()
+      .run();
+  };
+
+  const stopPointer = (event: React.PointerEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
+
   return (
     <NodeViewWrapper
       as="div"
@@ -161,6 +209,22 @@ export function ImageView({ node, editor, getPos, updateAttributes, selected }: 
                 className={`editor-image-wrapper__handle editor-image-wrapper__handle--${handle}`}
                 onPointerDown={startResize(handle)}
               />
+            ))}
+          {selected &&
+            editor.isEditable &&
+            INSERT_SIDES.map((side) => (
+              <button
+                key={side}
+                type="button"
+                className={`editor-image-wrapper__insert editor-image-wrapper__insert--${side}`}
+                aria-label={t(side === "before" ? "imageView.insertLineBefore" : "imageView.insertLineAfter")}
+                title={t(side === "before" ? "imageView.insertLineBefore" : "imageView.insertLineAfter")}
+                contentEditable={false}
+                onPointerDown={stopPointer}
+                onClick={insertLine(side)}
+              >
+                <Plus aria-hidden="true" />
+              </button>
             ))}
         </>
       ) : (

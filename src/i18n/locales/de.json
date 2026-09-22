@@ -732,7 +732,9 @@
   },
   "imageView": {
     "notFound": "Bild nicht gefunden: {{src}}",
-    "loading": "Bild wird geladen …"
+    "loading": "Bild wird geladen …",
+    "insertLineBefore": "Leere Zeile darüber einfügen",
+    "insertLineAfter": "Leere Zeile darunter einfügen"
   },
   "codeBlock": {
     "copy": "Code kopieren",

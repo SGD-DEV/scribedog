@@ -731,7 +731,9 @@
   },
   "imageView": {
     "notFound": "找不到图片：{{src}}",
-    "loading": "图片加载中……"
+    "loading": "图片加载中……",
+    "insertLineBefore": "在上方插入空行",
+    "insertLineAfter": "在下方插入空行"
   },
   "codeBlock": {
     "copy": "复制代码",

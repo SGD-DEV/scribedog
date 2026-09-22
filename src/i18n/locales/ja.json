@@ -731,7 +731,9 @@
   },
   "imageView": {
     "notFound": "画像が見つかりません：{{src}}",
-    "loading": "画像を読み込み中…"
+    "loading": "画像を読み込み中…",
+    "insertLineBefore": "上に空行を挿入",
+    "insertLineAfter": "下に空行を挿入"
   },
   "codeBlock": {
     "copy": "コードをコピー",
