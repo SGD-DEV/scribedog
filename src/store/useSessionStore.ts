@@ -23,7 +23,7 @@ type SessionState = {
   expired: boolean;
   /** Asks the server once at startup. */
   check: () => Promise<void>;
-  login: (password: string) => Promise<boolean>;
+  login: (username: string, password: string) => Promise<boolean>;
   logout: () => Promise<void>;
   /** The server refused a request for lack of a session (expired, revoked). */
   markSignedOut: () => void;
@@ -33,7 +33,8 @@ function messageFor(error: unknown): string {
   if (error instanceof SessionError) {
     switch (error.code) {
       case "invalid_password":
-        return i18n.t("login.wrongPassword");
+      case "invalid_credentials":
+        return i18n.t("login.wrongCredentials");
       case "too_many_attempts":
         return i18n.t("login.tooManyAttempts", { count: Math.max(1, Math.ceil((error.retryAfterSeconds ?? 60) / 60)) });
       case "unreachable":
@@ -76,7 +77,7 @@ export const useSessionStore = create<SessionState>((set, get) => ({
     }
   },
 
-  login: async (password) => {
+  login: async (username, password) => {
     const session = platform.session;
 
     if (!session) {
@@ -86,7 +87,7 @@ export const useSessionStore = create<SessionState>((set, get) => ({
     set({ isLoggingIn: true, loginError: null });
 
     try {
-      await session.login(password);
+      await session.login(username, password);
 
       // A save that ran into the expired session left its error in place of
       // the editor; with the session back, that message is stale.

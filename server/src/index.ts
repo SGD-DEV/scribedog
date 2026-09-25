@@ -30,6 +30,7 @@ async function main(): Promise<void> {
 
   const authStore = await openAuthStore({
     vaultPath: vault.realPath,
+    initUsername: config.initUsername,
     initPassword: config.initPassword,
     log: bootLog
   });

@@ -1176,13 +1176,15 @@
     "pageBreakBetweenChapters": "Start every chapter on a new page"
   },
   "login": {
-    "title": "ScribeDog",
-    "lead": "Sign in with the password of this ScribeDog server.",
+    "title": "SYNDOC",
+    "lead": "Sign in with your username and password.",
     "sessionExpired": "Your session has expired. Sign in again to continue; unsaved changes are kept.",
+    "username": "Username",
     "password": "Password",
     "submit": "Sign in",
     "signingIn": "Signing in …",
     "wrongPassword": "Wrong password.",
+    "wrongCredentials": "Wrong username or password.",
     "serverUnreachable": "The server could not be reached.",
     "failed": "Sign-in failed.",
     "tooManyAttempts_one": "Too many failed attempts. Try again in a minute.",

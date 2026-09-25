@@ -1176,13 +1176,15 @@
     "pageBreakBetweenChapters": "Jedes Kapitel auf einer neuen Seite beginnen"
   },
   "login": {
-    "title": "ScribeDog",
-    "lead": "Melde dich mit dem Passwort dieses ScribeDog-Servers an.",
+    "title": "SYNDOC",
+    "lead": "Melde dich mit deinem Benutzernamen und Passwort an.",
     "sessionExpired": "Deine Sitzung ist abgelaufen. Melde dich erneut an, um weiterzuarbeiten; ungespeicherte Änderungen bleiben erhalten.",
+    "username": "Benutzername",
     "password": "Passwort",
     "submit": "Anmelden",
     "signingIn": "Anmeldung läuft …",
     "wrongPassword": "Falsches Passwort.",
+    "wrongCredentials": "Benutzername oder Passwort falsch.",
     "serverUnreachable": "Der Server ist nicht erreichbar.",
     "failed": "Die Anmeldung ist fehlgeschlagen.",
     "tooManyAttempts_one": "Zu viele Fehlversuche. Versuche es in einer Minute erneut.",

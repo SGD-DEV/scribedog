@@ -172,8 +172,8 @@ export function createServerApi(transport: ServerTransport) {
 
   const api = {
     session: () => request<{ authenticated: boolean; via?: "cookie" | "token" }>("/auth/session"),
-    login: (password: string) =>
-      request<{ ok: true }>("/auth/login", { method: "POST", body: JSON.stringify({ password }), isLogin: true }),
+    login: (username: string, password: string) =>
+      request<{ ok: true }>("/auth/login", { method: "POST", body: JSON.stringify({ username, password }), isLogin: true }),
     logout: () => request<void>("/auth/logout", { method: "POST" }),
     /** Trades the password for an access token; the password is not kept. */
     issueToken: (password: string, name: string) =>

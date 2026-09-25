@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 
-import scribedogLogoAnimated from "@/assets/scribedog-logo-animated.svg";
+import syndocLogoAnimated from "@/assets/syndoc-logo-animated.svg";
 import { Button } from "@/components/ui/button";
 import { useSessionStore } from "@/store/useSessionStore";
 
@@ -20,45 +20,60 @@ type LoginViewProps = {
  */
 export function LoginView({ isOverlay }: LoginViewProps) {
   const { t } = useTranslation();
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
+  const usernameRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
   const login = useSessionStore((state) => state.login);
   const loginError = useSessionStore((state) => state.loginError);
   const isLoggingIn = useSessionStore((state) => state.isLoggingIn);
   const status = useSessionStore((state) => state.status);
 
   useEffect(() => {
-    inputRef.current?.focus();
+    usernameRef.current?.focus();
   }, []);
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
 
-    if (!password || isLoggingIn) {
+    if (!username || !password || isLoggingIn) {
       return;
     }
 
-    const ok = await login(password);
+    const ok = await login(username, password);
 
     if (ok) {
+      setUsername("");
       setPassword("");
     } else {
-      inputRef.current?.select();
+      usernameRef.current?.select();
     }
   };
 
   return (
     <div className="login-view ai-dialog" role="dialog" aria-modal="true" aria-labelledby="login-title">
       <form className="ai-dialog__panel login-view__panel" onSubmit={(event) => void handleSubmit(event)}>
-        <img className="login-view__logo" src={scribedogLogoAnimated} alt="" aria-hidden="true" />
+        <img className="login-view__logo" src={syndocLogoAnimated} alt="" aria-hidden="true" />
         <h1 id="login-title" className="login-view__title">
           {t("login.title")}
         </h1>
         <p className="login-view__lead">{isOverlay ? t("login.sessionExpired") : t("login.lead")}</p>
         <label className="ai-dialog__field">
+          <span>{t("login.username")}</span>
+          <input
+            ref={usernameRef}
+            type="text"
+            autoComplete="username"
+            value={username}
+            onChange={(event) => setUsername(event.target.value)}
+            disabled={isLoggingIn}
+            data-testid="username"
+          />
+        </label>
+        <label className="ai-dialog__field">
           <span>{t("login.password")}</span>
           <input
-            ref={inputRef}
+            ref={passwordRef}
             type="password"
             autoComplete="current-password"
             value={password}
@@ -76,7 +91,7 @@ export function LoginView({ isOverlay }: LoginViewProps) {
             {t("login.serverUnreachable")}
           </p>
         ) : null}
-        <Button type="submit" disabled={!password || isLoggingIn} data-testid="login">
+        <Button type="submit" disabled={!username || !password || isLoggingIn} data-testid="login">
           {isLoggingIn ? t("login.signingIn") : t("login.submit")}
         </Button>
       </form>

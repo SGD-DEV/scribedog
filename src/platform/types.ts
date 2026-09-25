@@ -376,8 +376,8 @@ export type RemoteVaultsApi = {
  */
 export type SessionApi = {
   getStatus(): Promise<SessionStatus>;
-  /** Rejects with `SessionError` on a wrong password. */
-  login(password: string): Promise<void>;
+  /** Rejects with `SessionError` on wrong credentials. */
+  login(username: string, password: string): Promise<void>;
   logout(): Promise<void>;
   /**
    * Replaces the password. Every other session ends (the server bumps the

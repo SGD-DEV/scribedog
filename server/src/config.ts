@@ -18,6 +18,13 @@ export type ServerConfig = {
   host: string;
   port: number;
   /**
+   * Initial username, honoured only while the vault has no credentials yet.
+   * Once credentials exist the variable is ignored (and a startup log line says
+   * so), otherwise every redeploy with the variable still set would reset the
+   * credentials.
+   */
+  initUsername: string | null;
+  /**
    * Initial password, honoured only while the vault has no password hash yet.
    * Once a hash exists the variable is ignored (and a startup log line says
    * so), otherwise every redeploy with the variable still set would reset the
@@ -205,6 +212,7 @@ function parseOrigins(raw: string | undefined): string[] {
 
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): ServerConfig {
   const vaultPath = path.resolve(env.SCRIBEDOG_VAULT_PATH?.trim() || "/data");
+  const initUsername = env.SCRIBEDOG_INIT_USERNAME ?? null;
   const initPassword = env.SCRIBEDOG_INIT_PASSWORD ?? null;
 
   return {
@@ -212,6 +220,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ServerConfig {
     basePath: normalizeBasePath(env.SCRIBEDOG_BASE_PATH),
     host: env.SCRIBEDOG_HOST?.trim() || "0.0.0.0",
     port: parseInteger(env.SCRIBEDOG_PORT, 3000, "SCRIBEDOG_PORT"),
+    initUsername: initUsername && initUsername.length > 0 ? initUsername : null,
     initPassword: initPassword && initPassword.length > 0 ? initPassword : null,
     cookieSecure: parseBoolean(env.SCRIBEDOG_COOKIE_SECURE, true),
     trustProxy: parseTrustProxy(env.SCRIBEDOG_TRUST_PROXY),

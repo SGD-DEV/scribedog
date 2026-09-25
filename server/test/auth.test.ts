@@ -102,36 +102,36 @@ describe("auth store", () => {
     const warnings: string[] = [];
     const warnLog = { info: () => {}, warn: (message: string) => warnings.push(message) };
 
-    const first = await openAuthStore({ vaultPath, initPassword: "first password", log: warnLog });
+    const first = await openAuthStore({ vaultPath, initUsername: "testuser", initPassword: "first password", log: warnLog });
     expect(await first.verifyPassword("first password")).toBe(true);
     expect(warnings).toHaveLength(0);
 
     // A redeploy with a different init password must not reset anything.
-    const second = await openAuthStore({ vaultPath, initPassword: "second password", log: warnLog });
+    const second = await openAuthStore({ vaultPath, initUsername: "different", initPassword: "second password", log: warnLog });
     expect(await second.verifyPassword("first password")).toBe(true);
     expect(await second.verifyPassword("second password")).toBe(false);
     expect(warnings).toHaveLength(1);
     expect(warnings[0]).toMatch(/ignored/);
 
     // And once a hash exists the variable is not needed at all.
-    const third = await openAuthStore({ vaultPath, initPassword: null, log: warnLog });
+    const third = await openAuthStore({ vaultPath, initUsername: null, initPassword: null, log: warnLog });
     expect(await third.verifyPassword("first password")).toBe(true);
     expect(third.sessionSecret.equals(first.sessionSecret)).toBe(true);
   });
 
   it("refuses to start without a password and without an init password", async () => {
     const vaultPath = await tempVault();
-    await expect(openAuthStore({ vaultPath, initPassword: null, log })).rejects.toThrow(/SCRIBEDOG_INIT_PASSWORD/);
+    await expect(openAuthStore({ vaultPath, initUsername: null, initPassword: null, log })).rejects.toThrow(/SCRIBEDOG_INIT/);
   });
 
   it("refuses an init password that breaks the policy", async () => {
     const vaultPath = await tempVault();
-    await expect(openAuthStore({ vaultPath, initPassword: "short", log })).rejects.toThrow(/at least/);
+    await expect(openAuthStore({ vaultPath, initUsername: "testuser", initPassword: "short", log })).rejects.toThrow(/at least/);
   });
 
   it("stores the hash and the secret under .scribedog/server", async () => {
     const vaultPath = await tempVault();
-    await openAuthStore({ vaultPath, initPassword: "first password", log });
+    await openAuthStore({ vaultPath, initUsername: "testuser", initPassword: "first password", log });
 
     const authFile = JSON.parse(await readFile(path.join(vaultPath, SERVER_META_DIR, "auth.json"), "utf8"));
     expect(authFile.passwordHash).toMatch(/^\$scrypt\$/);
