@@ -574,3 +574,105 @@
 .sgd-branding-status--error {
   color: rgba(244, 67, 54, 1);
 }
+
+/* Icon Picker */
+.sgd-icon-picker {
+  position: relative;
+}
+
+.sgd-icon-picker-trigger {
+  appearance: none;
+  border: 1px solid rgba(var(--overlay-rgb), 0.2);
+  border-radius: 0.5rem;
+  background: rgba(var(--overlay-rgb), 0.03);
+  padding: 0.5rem 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(var(--text-rgb), 0.9);
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 120ms ease;
+}
+
+.sgd-icon-picker-trigger:hover {
+  border-color: rgba(var(--accent-rgb), 0.4);
+  background: rgba(var(--overlay-rgb), 0.06);
+}
+
+.sgd-icon-picker-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.5rem;
+  background: rgba(var(--bg-rgb), 1);
+  border: 1px solid rgba(var(--overlay-rgb), 0.2);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  width: 320px;
+  max-height: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sgd-icon-picker-search {
+  padding: 0.75rem;
+  border-bottom: 1px solid rgba(var(--overlay-rgb), 0.1);
+}
+
+.sgd-icon-picker-search-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid rgba(var(--overlay-rgb), 0.2);
+  border-radius: 0.375rem;
+  background: rgba(var(--overlay-rgb), 0.03);
+  color: rgba(var(--text-rgb), 0.9);
+  font: inherit;
+  font-size: 0.85rem;
+}
+
+.sgd-icon-picker-search-input:focus {
+  outline: none;
+  border-color: rgba(var(--accent-rgb), 0.5);
+}
+
+.sgd-icon-picker-grid {
+  padding: 0.5rem;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.25rem;
+  overflow-y: auto;
+  max-height: 300px;
+}
+
+.sgd-icon-picker-item {
+  appearance: none;
+  border: 1px solid transparent;
+  border-radius: 0.375rem;
+  background: transparent;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(var(--text-rgb), 0.7);
+  cursor: pointer;
+  transition: all 120ms ease;
+}
+
+.sgd-icon-picker-item:hover {
+  background: rgba(var(--overlay-rgb), 0.08);
+  color: rgba(var(--text-rgb), 0.95);
+  border-color: rgba(var(--overlay-rgb), 0.15);
+}
+
+.sgd-icon-picker-item--active {
+  background: rgba(var(--accent-rgb), 0.12);
+  color: rgba(var(--accent-rgb), 1);
+  border-color: rgba(var(--accent-rgb), 0.3);
+}
+
+.sgd-icon-picker-item--active:hover {
+  background: rgba(var(--accent-rgb), 0.18);
+}

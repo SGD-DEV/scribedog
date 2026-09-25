@@ -3,6 +3,7 @@ import { Upload, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/ui/button";
+import { IconPicker } from "@/components/icons/IconPicker";
 import { InfoPopover } from "@/components/settings/InfoPopover";
 import { SettingRow } from "@/components/settings/SettingRow";
 import { SettingsPage } from "@/components/settings/SettingsPage";
@@ -12,6 +13,13 @@ type BrandingData = {
   appName: string;
   logoUrl: string | null;
   faviconUrl: string | null;
+  icons?: {
+    home?: string;
+    folder?: string;
+    file?: string;
+    settings?: string;
+    search?: string;
+  };
 };
 
 export function BrandingSettings() {
@@ -21,6 +29,13 @@ export function BrandingSettings() {
   const [faviconFile, setFaviconFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [faviconPreview, setFaviconPreview] = useState<string | null>(null);
+  const [icons, setIcons] = useState({
+    home: "home",
+    folder: "folder",
+    file: "description",
+    settings: "settings",
+    search: "search"
+  });
   const [isSaving, setIsSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState<"idle" | "success" | "error">("idle");
   
@@ -42,6 +57,15 @@ export function BrandingSettings() {
         }
         if (data.faviconUrl) {
           setFaviconPreview(data.faviconUrl);
+        }
+        if (data.icons) {
+          setIcons({
+            home: data.icons.home || "home",
+            folder: data.icons.folder || "folder",
+            file: data.icons.file || "description",
+            settings: data.icons.settings || "settings",
+            search: data.icons.search || "search"
+          });
         }
       }
     } catch (error) {
@@ -80,6 +104,7 @@ export function BrandingSettings() {
     try {
       const formData = new FormData();
       formData.append("appName", appName);
+      formData.append("icons", JSON.stringify(icons));
       
       if (logoFile) {
         formData.append("logo", logoFile);
@@ -123,7 +148,8 @@ export function BrandingSettings() {
     setFaviconPreview(null);
   };
 
-  const hasChanges = logoFile !== null || faviconFile !== null || appName !== "SYNDOC";
+  const hasChanges = logoFile !== null || faviconFile !== null || appName !== "SYNDOC" || 
+    JSON.stringify(icons) !== JSON.stringify({ home: "home", folder: "folder", file: "description", settings: "settings", search: "search" });
 
   return (
     <SettingsPage>
@@ -228,6 +254,86 @@ export function BrandingSettings() {
             className="sgd-branding-file-input"
           />
         </div>
+      </SettingRow>
+
+      <h3 className="sgd-settings-heading" style={{ marginTop: "2rem" }}>
+        {t("settingsDialog.brandingIconsTitle")}
+      </h3>
+      <p className="sgd-settings-lead">{t("settingsDialog.brandingIconsDescription")}</p>
+
+      <SettingRow
+        label={t("settingsDialog.brandingIconHome")}
+        info={
+          <InfoPopover title={t("settingsDialog.brandingIconHome")}>
+            {t("settingsDialog.brandingIconHomeHint")}
+          </InfoPopover>
+        }
+      >
+        <IconPicker
+          value={icons.home}
+          onChange={(icon) => setIcons({ ...icons, home: icon })}
+          label={icons.home}
+        />
+      </SettingRow>
+
+      <SettingRow
+        label={t("settingsDialog.brandingIconFolder")}
+        info={
+          <InfoPopover title={t("settingsDialog.brandingIconFolder")}>
+            {t("settingsDialog.brandingIconFolderHint")}
+          </InfoPopover>
+        }
+      >
+        <IconPicker
+          value={icons.folder}
+          onChange={(icon) => setIcons({ ...icons, folder: icon })}
+          label={icons.folder}
+        />
+      </SettingRow>
+
+      <SettingRow
+        label={t("settingsDialog.brandingIconFile")}
+        info={
+          <InfoPopover title={t("settingsDialog.brandingIconFile")}>
+            {t("settingsDialog.brandingIconFileHint")}
+          </InfoPopover>
+        }
+      >
+        <IconPicker
+          value={icons.file}
+          onChange={(icon) => setIcons({ ...icons, file: icon })}
+          label={icons.file}
+        />
+      </SettingRow>
+
+      <SettingRow
+        label={t("settingsDialog.brandingIconSettings")}
+        info={
+          <InfoPopover title={t("settingsDialog.brandingIconSettings")}>
+            {t("settingsDialog.brandingIconSettingsHint")}
+          </InfoPopover>
+        }
+      >
+        <IconPicker
+          value={icons.settings}
+          onChange={(icon) => setIcons({ ...icons, settings: icon })}
+          label={icons.settings}
+        />
+      </SettingRow>
+
+      <SettingRow
+        label={t("settingsDialog.brandingIconSearch")}
+        info={
+          <InfoPopover title={t("settingsDialog.brandingIconSearch")}>
+            {t("settingsDialog.brandingIconSearchHint")}
+          </InfoPopover>
+        }
+      >
+        <IconPicker
+          value={icons.search}
+          onChange={(icon) => setIcons({ ...icons, search: icon })}
+          label={icons.search}
+        />
       </SettingRow>
 
       <div className="sgd-settings-actions">

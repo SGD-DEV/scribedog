@@ -13,6 +13,13 @@ type BrandingData = {
   appName: string;
   logoUrl: string | null;
   faviconUrl: string | null;
+  icons?: {
+    home?: string;
+    folder?: string;
+    file?: string;
+    settings?: string;
+    search?: string;
+  };
 };
 
 export type BrandingRoutesOptions = {
@@ -36,7 +43,18 @@ async function loadBrandingFile(vaultPath: string): Promise<BrandingData> {
     return JSON.parse(content) as BrandingData;
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === "ENOENT") {
-      return { appName: "SYNDOC", logoUrl: null, faviconUrl: null };
+      return { 
+        appName: "SYNDOC", 
+        logoUrl: null, 
+        faviconUrl: null,
+        icons: {
+          home: "home",
+          folder: "folder",
+          file: "description",
+          settings: "settings",
+          search: "search"
+        }
+      };
     }
     throw error;
   }
@@ -67,6 +85,13 @@ export async function brandingRoutes(app: FastifyInstance, options: BrandingRout
         if (part.type === "field") {
           if (part.fieldname === "appName") {
             branding.appName = part.value.toString().trim() || "SYNDOC";
+          } else if (part.fieldname === "icons") {
+            try {
+              const iconsData = JSON.parse(part.value.toString());
+              branding.icons = iconsData;
+            } catch {
+              // Invalid JSON, ignore
+            }
           }
         } else if (part.type === "file") {
           const fileBuffer = await part.toBuffer();
