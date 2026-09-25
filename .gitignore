@@ -33,3 +33,6 @@ CLAUDE.md
 
 # Logs and PID files of scripts/local-web-*.sh
 scripts/.run/
+
+# Branding uploads
+.scribedog/server/uploads/
