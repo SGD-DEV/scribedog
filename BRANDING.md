@@ -6,6 +6,7 @@ SYNDOC bietet die Möglichkeit, das Erscheinungsbild der Anwendung vollständig 
 - **Logo**: Wird im Login-Bildschirm angezeigt
 - **Favicon**: Browser-Tab-Icon
 - **App-Name**: Titel der Anwendung
+- **Icons**: Material Icons für verschiedene Bereiche der App
 
 ## Einstellungen öffnen
 
@@ -59,6 +60,39 @@ SYNDOC bietet die Möglichkeit, das Erscheinungsbild der Anwendung vollständig 
    - Login-Bildschirm
    - Navigation
 
+## Icons anpassen
+
+### Verfügbare Icon-Bereiche
+- **Home-Icon**: Startseite oder Hauptnavigation
+- **Ordner-Icon**: Ordner in der Seitenleiste
+- **Datei-Icon**: Dateien in der Seitenleiste
+- **Einstellungen-Icon**: Einstellungen-Button
+- **Suche-Icon**: Suchfunktion
+
+### Icon auswählen
+1. Im Bereich **"Icons anpassen"** auf ein Icon klicken
+2. **Icon-Picker** öffnet sich mit allen verfügbaren Material Icons
+3. Suchfeld verwenden um Icons zu filtern
+4. Gewünschtes Icon anklicken
+5. Mit **"Speichern"** bestätigen
+
+### Verfügbare Material Icons
+Über 30 Material Design Icons stehen zur Auswahl:
+- `home`, `folder`, `description` (Datei)
+- `settings`, `search`, `add`, `close`
+- `edit`, `delete`, `save`, `upload`, `download`
+- `visibility`, `visibility_off`, `info`, `warning`
+- `check`, `arrow_back`, `arrow_forward`, `refresh`
+- `star`, `favorite`, `image`, `chat`, `link`, `code`
+- und mehr...
+
+### Icon-Vorschau
+Jeder Icon-Picker zeigt das aktuell ausgewählte Icon an. Durch Klicken öffnet sich die Auswahl mit:
+- **Suchfeld**: Nach Icon-Namen filtern
+- **Grid-Layout**: Übersichtliche Darstellung aller Icons
+- **Hover-Effekt**: Name des Icons beim Überfahren
+- **Aktiv-Markierung**: Aktuell ausgewähltes Icon hervorgehoben
+
 ## Speicherung
 
 Nach dem Klick auf **"Speichern"**:
@@ -84,7 +118,14 @@ vault/
 {
   "appName": "SYNDOC",
   "logoUrl": "/api/branding/uploads/logo-1234567890.svg",
-  "faviconUrl": "/api/branding/uploads/favicon-1234567890.svg"
+  "faviconUrl": "/api/branding/uploads/favicon-1234567890.svg",
+  "icons": {
+    "home": "home",
+    "folder": "folder",
+    "file": "description",
+    "settings": "settings",
+    "search": "search"
+  }
 }
 ```
 
@@ -163,14 +204,25 @@ curl http://localhost:3000/api/branding/uploads/logo-1234567890.svg
 3. App-Name ändern: `"SYNDOC"` → `"MeineDocs"`
 4. Logo hochladen: `firmenlogo.svg`
 5. Favicon hochladen: `icon.png`
-6. Speichern klicken
-7. Seite lädt neu mit neuem Branding
+6. Icons anpassen (optional):
+   - Home-Icon: `home` → `dashboard`
+   - Ordner-Icon: `folder` → `folder_open`
+   - Etc.
+7. Speichern klicken
+8. Seite lädt neu mit neuem Branding
 
 ### Nur App-Name ändern
 1. Einstellungen → Branding
 2. App-Name ändern
 3. Speichern
 4. Fertig (kein File-Upload nötig)
+
+### Nur Icons anpassen
+1. Einstellungen → Branding
+2. Zu "Icons anpassen" scrollen
+3. Gewünschte Icons auswählen
+4. Speichern
+5. Neue Icons werden sofort verwendet
 
 ## Sicherheit
 
