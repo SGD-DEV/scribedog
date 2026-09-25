@@ -9,6 +9,7 @@ import { RemoteVaultsSettings } from "@/components/remote/RemoteVaultsSettings";
 import { LicensesDialog } from "@/components/LicensesDialog";
 import { RagSettings } from "@/components/RagSettings";
 import { AppearanceSettings } from "@/components/settings/AppearanceSettings";
+import { BrandingSettings } from "@/components/settings/BrandingSettings";
 import { InfoPopover } from "@/components/settings/InfoPopover";
 import { SettingRow } from "@/components/settings/SettingRow";
 import { SettingsNav } from "@/components/settings/SettingsNav";
@@ -693,6 +694,10 @@ export function SettingsDialog({
             ) : activeTab === "appearance" ? (
               <SettingsPage tab="appearance">
                 <AppearanceSettings onThemeBuilderRequest={onThemeBuilderRequest} />
+              </SettingsPage>
+            ) : activeTab === "branding" ? (
+              <SettingsPage tab="branding">
+                <BrandingSettings />
               </SettingsPage>
             ) : activeTab === "fonts" ? (
               <SettingsPage tab="fonts">

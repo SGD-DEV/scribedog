@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import syndocLogoAnimated from "@/assets/syndoc-logo-animated.svg";
 import { Button } from "@/components/ui/button";
+import { useBranding } from "@/hooks/useBranding";
 import { useSessionStore } from "@/store/useSessionStore";
 
 type LoginViewProps = {
@@ -28,6 +29,7 @@ export function LoginView({ isOverlay }: LoginViewProps) {
   const loginError = useSessionStore((state) => state.loginError);
   const isLoggingIn = useSessionStore((state) => state.isLoggingIn);
   const status = useSessionStore((state) => state.status);
+  const branding = useBranding();
 
   useEffect(() => {
     usernameRef.current?.focus();
@@ -53,7 +55,7 @@ export function LoginView({ isOverlay }: LoginViewProps) {
   return (
     <div className="login-view ai-dialog" role="dialog" aria-modal="true" aria-labelledby="login-title">
       <form className="ai-dialog__panel login-view__panel" onSubmit={(event) => void handleSubmit(event)}>
-        <img className="login-view__logo" src={syndocLogoAnimated} alt="" aria-hidden="true" />
+        <img className="login-view__logo" src={branding.logoUrl || syndocLogoAnimated} alt="" aria-hidden="true" />
         <h1 id="login-title" className="login-view__title">
           {t("login.title")}
         </h1>

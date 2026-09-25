@@ -456,3 +456,121 @@
 .account-settings__head h3 {
   margin: 0;
 }
+
+/* Branding Settings */
+.sgd-branding-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sgd-branding-preview {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  border: 1px solid rgba(var(--overlay-rgb), 0.15);
+  border-radius: 0.5rem;
+  background: rgba(var(--overlay-rgb), 0.03);
+  max-width: 200px;
+}
+
+.sgd-branding-preview-image {
+  max-width: 180px;
+  max-height: 80px;
+  object-fit: contain;
+}
+
+.sgd-branding-preview-icon {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.sgd-branding-remove {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  appearance: none;
+  border: none;
+  background: rgba(var(--text-rgb), 0.85);
+  color: rgba(var(--bg-rgb), 1);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 120ms ease;
+}
+
+.sgd-branding-remove:hover {
+  background: rgba(var(--text-rgb), 1);
+}
+
+.sgd-branding-upload-button {
+  appearance: none;
+  border: 2px dashed rgba(var(--overlay-rgb), 0.2);
+  border-radius: 0.5rem;
+  background: rgba(var(--overlay-rgb), 0.03);
+  padding: 1.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(var(--text-rgb), 0.7);
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 120ms ease;
+}
+
+.sgd-branding-upload-button:hover {
+  border-color: rgba(var(--accent-rgb), 0.4);
+  background: rgba(var(--overlay-rgb), 0.06);
+  color: rgba(var(--text-rgb), 0.9);
+}
+
+.sgd-branding-file-input {
+  display: none;
+}
+
+.sgd-settings-input {
+  width: 100%;
+  max-width: 300px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid rgba(var(--overlay-rgb), 0.2);
+  border-radius: 0.5rem;
+  background: rgba(var(--overlay-rgb), 0.03);
+  color: rgba(var(--text-rgb), 0.9);
+  font: inherit;
+  font-size: 0.9rem;
+  transition: border 120ms ease;
+}
+
+.sgd-settings-input:focus {
+  outline: none;
+  border-color: rgba(var(--accent-rgb), 0.5);
+}
+
+.sgd-settings-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.sgd-branding-status {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.sgd-branding-status--success {
+  color: rgba(76, 175, 80, 1);
+}
+
+.sgd-branding-status--error {
+  color: rgba(244, 67, 54, 1);
+}
