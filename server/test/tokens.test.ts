@@ -7,7 +7,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { SERVER_META_DIR } from "../src/auth/authStore.js";
 import { openTokenStore } from "../src/auth/tokenStore.js";
 import { REVOKED_CLOSE_CODE } from "../src/vault/eventRoutes.js";
-import { createTempVault, createTestContext, TEST_PASSWORD, type TestContext } from "./helpers.js";
+import { createTempVault, createTestContext, TEST_PASSWORD, TEST_USERNAME, type TestContext } from "./helpers.js";
 
 type IssuedResponse = { id: string; name: string; token: string; createdAt: string; lastUsedAt: string | null };
 
@@ -120,7 +120,7 @@ describe("access tokens over the API", () => {
       await context.app.inject({ method: "POST", url: "/api/auth/tokens", payload: { password: "wrong wrong", name: "x" } });
     }
 
-    const locked = await context.app.inject({ method: "POST", url: "/api/auth/login", payload: { password: TEST_PASSWORD } });
+    const locked = await context.app.inject({ method: "POST", url: "/api/auth/login", payload: { username: TEST_USERNAME, password: TEST_PASSWORD } });
     expect(locked.statusCode).toBe(429);
 
     const lockedIssue = await context.app.inject({

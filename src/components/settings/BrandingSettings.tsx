@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/ui/button";
 import { IconPicker } from "@/components/icons/IconPicker";
-import { InfoPopover } from "@/components/settings/InfoPopover";
 import { SettingRow } from "@/components/settings/SettingRow";
 import { SettingsPage } from "@/components/settings/SettingsPage";
 import { platform } from "@/platform";
@@ -152,17 +151,13 @@ export function BrandingSettings() {
     JSON.stringify(icons) !== JSON.stringify({ home: "home", folder: "folder", file: "description", settings: "settings", search: "search" });
 
   return (
-    <SettingsPage>
+    <SettingsPage tab="branding">
       <h2 className="sgd-settings-heading">{t("settingsDialog.brandingTitle")}</h2>
       <p className="sgd-settings-lead">{t("settingsDialog.brandingDescription")}</p>
 
       <SettingRow
         label={t("settingsDialog.brandingAppName")}
-        info={
-          <InfoPopover title={t("settingsDialog.brandingAppName")}>
-            {t("settingsDialog.brandingAppNameHint")}
-          </InfoPopover>
-        }
+        info={t("settingsDialog.brandingAppNameHint")}
       >
         <input
           type="text"
@@ -176,11 +171,7 @@ export function BrandingSettings() {
 
       <SettingRow
         label={t("settingsDialog.brandingLogo")}
-        info={
-          <InfoPopover title={t("settingsDialog.brandingLogo")}>
-            {t("settingsDialog.brandingLogoHint")}
-          </InfoPopover>
-        }
+        info={t("settingsDialog.brandingLogoHint")}
       >
         <div className="sgd-branding-upload">
           {logoPreview ? (
@@ -217,11 +208,7 @@ export function BrandingSettings() {
 
       <SettingRow
         label={t("settingsDialog.brandingFavicon")}
-        info={
-          <InfoPopover title={t("settingsDialog.brandingFavicon")}>
-            {t("settingsDialog.brandingFaviconHint")}
-          </InfoPopover>
-        }
+        info={t("settingsDialog.brandingFaviconHint")}
       >
         <div className="sgd-branding-upload">
           {faviconPreview ? (
@@ -263,11 +250,7 @@ export function BrandingSettings() {
 
       <SettingRow
         label={t("settingsDialog.brandingIconHome")}
-        info={
-          <InfoPopover title={t("settingsDialog.brandingIconHome")}>
-            {t("settingsDialog.brandingIconHomeHint")}
-          </InfoPopover>
-        }
+        info={t("settingsDialog.brandingIconHomeHint")}
       >
         <IconPicker
           value={icons.home}
@@ -278,11 +261,7 @@ export function BrandingSettings() {
 
       <SettingRow
         label={t("settingsDialog.brandingIconFolder")}
-        info={
-          <InfoPopover title={t("settingsDialog.brandingIconFolder")}>
-            {t("settingsDialog.brandingIconFolderHint")}
-          </InfoPopover>
-        }
+        info={t("settingsDialog.brandingIconFolderHint")}
       >
         <IconPicker
           value={icons.folder}
@@ -293,11 +272,7 @@ export function BrandingSettings() {
 
       <SettingRow
         label={t("settingsDialog.brandingIconFile")}
-        info={
-          <InfoPopover title={t("settingsDialog.brandingIconFile")}>
-            {t("settingsDialog.brandingIconFileHint")}
-          </InfoPopover>
-        }
+        info={t("settingsDialog.brandingIconFileHint")}
       >
         <IconPicker
           value={icons.file}
@@ -308,11 +283,7 @@ export function BrandingSettings() {
 
       <SettingRow
         label={t("settingsDialog.brandingIconSettings")}
-        info={
-          <InfoPopover title={t("settingsDialog.brandingIconSettings")}>
-            {t("settingsDialog.brandingIconSettingsHint")}
-          </InfoPopover>
-        }
+        info={t("settingsDialog.brandingIconSettingsHint")}
       >
         <IconPicker
           value={icons.settings}
@@ -323,11 +294,7 @@ export function BrandingSettings() {
 
       <SettingRow
         label={t("settingsDialog.brandingIconSearch")}
-        info={
-          <InfoPopover title={t("settingsDialog.brandingIconSearch")}>
-            {t("settingsDialog.brandingIconSearchHint")}
-          </InfoPopover>
-        }
+        info={t("settingsDialog.brandingIconSearchHint")}
       >
         <IconPicker
           value={icons.search}

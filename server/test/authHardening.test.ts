@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { createLoginThrottle } from "../src/auth/loginThrottle.js";
 import { SESSION_COOKIE_NAME } from "../src/auth/session.js";
 import { KEY_COOKIE_NAME } from "../src/secrets/keyCookie.js";
-import { createTestContext, TEST_PASSWORD, type TestContext } from "./helpers.js";
+import { createTestContext, TEST_PASSWORD, TEST_USERNAME, type TestContext } from "./helpers.js";
 
 describe("login throttle", () => {
   const options = { maxAttempts: 3, lockSeconds: 60, maxLockSeconds: 900 };
@@ -77,7 +77,7 @@ describe("login route with throttling", () => {
   });
 
   const attempt = (password: string, ip = "203.0.113.5") =>
-    context.app.inject({ method: "POST", url: "/api/auth/login", payload: { password }, remoteAddress: ip });
+    context.app.inject({ method: "POST", url: "/api/auth/login", payload: { username: TEST_USERNAME, password }, remoteAddress: ip });
 
   it("answers 429 with Retry-After once the limit is reached", async () => {
     expect((await attempt("wrong password")).statusCode).toBe(401);
@@ -106,7 +106,7 @@ describe("login route with throttling", () => {
       context.app.inject({
         method: "POST",
         url: "/api/auth/login",
-        payload: { password: "wrong password" },
+        payload: { username: TEST_USERNAME, password: "wrong password" },
         remoteAddress: "172.21.0.3",
         headers: { "x-forwarded-for": `${claimed}, 198.51.100.44` }
       });
@@ -117,7 +117,7 @@ describe("login route with throttling", () => {
     const locked = await context.app.inject({
       method: "POST",
       url: "/api/auth/login",
-      payload: { password: TEST_PASSWORD },
+      payload: { username: TEST_USERNAME, password: TEST_PASSWORD },
       remoteAddress: "172.21.0.3",
       headers: { "x-forwarded-for": "5.5.5.5, 198.51.100.44" }
     });
@@ -176,7 +176,7 @@ describe("origin check", () => {
       method: "POST",
       url: "/api/auth/login",
       headers: { origin: "https://evil.example" },
-      payload: { password: TEST_PASSWORD }
+      payload: { username: TEST_USERNAME, password: TEST_PASSWORD }
     });
 
     expect(response.statusCode).toBe(403);
@@ -283,7 +283,7 @@ describe("changing the password", () => {
     const cookie = await context.login();
 
     expect((await change(cookie, "not the password", "a new long password")).statusCode).toBe(401);
-    expect((await context.app.inject({ method: "POST", url: "/api/auth/login", payload: { password: TEST_PASSWORD } })).statusCode).toBe(
+    expect((await context.app.inject({ method: "POST", url: "/api/auth/login", payload: { username: TEST_USERNAME, password: TEST_PASSWORD } })).statusCode).toBe(
       200
     );
   });
@@ -315,11 +315,11 @@ describe("changing the password", () => {
     expect((await context.app.inject({ method: "GET", url: "/api/files", headers: { cookie: refreshed } })).statusCode).toBe(200);
 
     // And the old password no longer works.
-    expect((await context.app.inject({ method: "POST", url: "/api/auth/login", payload: { password: TEST_PASSWORD } })).statusCode).toBe(
+    expect((await context.app.inject({ method: "POST", url: "/api/auth/login", payload: { username: TEST_USERNAME, password: TEST_PASSWORD } })).statusCode).toBe(
       401
     );
     expect(
-      (await context.app.inject({ method: "POST", url: "/api/auth/login", payload: { password: "a new long password" } })).statusCode
+      (await context.app.inject({ method: "POST", url: "/api/auth/login", payload: { username: TEST_USERNAME, password: "a new long password" } })).statusCode
     ).toBe(200);
   });
 });

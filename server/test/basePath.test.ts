@@ -7,7 +7,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { SESSION_COOKIE_NAME } from "../src/auth/session.js";
 import { ConfigError, loadConfig, normalizeBasePath, parseTrustProxy } from "../src/config.js";
 import { BASE_PATH_PLACEHOLDER, renderIndexHtml } from "../src/web/staticSite.js";
-import { createTestContext, TEST_PASSWORD, type TestContext } from "./helpers.js";
+import { createTestContext, TEST_PASSWORD, TEST_USERNAME, type TestContext } from "./helpers.js";
 
 describe("normalizeBasePath", () => {
   it("treats empty and root as the root", () => {
@@ -98,7 +98,7 @@ describe("app under a base path", () => {
   it("serves nothing at the bare root", async () => {
     expect((await context.app.inject({ method: "GET", url: "/" })).statusCode).toBe(404);
     expect((await context.app.inject({ method: "GET", url: "/api/files" })).statusCode).toBe(404);
-    expect((await context.app.inject({ method: "POST", url: "/api/auth/login", payload: { password: TEST_PASSWORD } })).statusCode).toBe(
+    expect((await context.app.inject({ method: "POST", url: "/api/auth/login", payload: { username: TEST_USERNAME, password: TEST_PASSWORD } })).statusCode).toBe(
       404
     );
     expect((await context.app.inject({ method: "GET", url: "/assets/app.js" })).statusCode).toBe(404);
@@ -153,7 +153,7 @@ describe("app under a base path", () => {
   });
 
   it("scopes the session cookie to the prefix and mounts the API under it", async () => {
-    const login = await context.app.inject({ method: "POST", url: "/anna/api/auth/login", payload: { password: TEST_PASSWORD } });
+    const login = await context.app.inject({ method: "POST", url: "/anna/api/auth/login", payload: { username: TEST_USERNAME, password: TEST_PASSWORD } });
 
     expect(login.statusCode).toBe(200);
     const cookie = login.cookies.find((entry) => entry.name === SESSION_COOKIE_NAME);

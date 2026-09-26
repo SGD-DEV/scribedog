@@ -84,10 +84,10 @@ export async function brandingRoutes(app: FastifyInstance, options: BrandingRout
       for await (const part of parts) {
         if (part.type === "field") {
           if (part.fieldname === "appName") {
-            branding.appName = part.value.toString().trim() || "SYNDOC";
+            branding.appName = String(part.value).trim() || "SYNDOC";
           } else if (part.fieldname === "icons") {
             try {
-              const iconsData = JSON.parse(part.value.toString());
+              const iconsData = JSON.parse(String(part.value));
               branding.icons = iconsData;
             } catch {
               // Invalid JSON, ignore

@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { openAuthStore, SERVER_META_DIR } from "../src/auth/authStore.js";
 import { hashPassword, verifyPassword } from "../src/auth/password.js";
 import { createSessionToken, SESSION_COOKIE_NAME, verifySessionToken, type SessionConfig } from "../src/auth/session.js";
-import { createTempVault, createTestContext, TEST_PASSWORD, type TestContext } from "./helpers.js";
+import { createTempVault, createTestContext, TEST_PASSWORD, TEST_USERNAME, type TestContext } from "./helpers.js";
 
 describe("password hashing", () => {
   it("verifies the password it hashed and rejects others", async () => {
@@ -152,7 +152,7 @@ describe("auth routes", () => {
   });
 
   it("rejects a wrong password without setting a cookie", async () => {
-    const response = await context.app.inject({ method: "POST", url: "/api/auth/login", payload: { password: "wrong password" } });
+    const response = await context.app.inject({ method: "POST", url: "/api/auth/login", payload: { username: TEST_USERNAME, password: "wrong password" } });
 
     expect(response.statusCode).toBe(401);
     expect(response.cookies).toHaveLength(0);
@@ -160,12 +160,12 @@ describe("auth routes", () => {
 
   it("rejects a malformed body", async () => {
     expect((await context.app.inject({ method: "POST", url: "/api/auth/login", payload: {} })).statusCode).toBe(400);
-    expect((await context.app.inject({ method: "POST", url: "/api/auth/login", payload: { password: 42 } })).statusCode).toBe(400);
-    expect((await context.app.inject({ method: "POST", url: "/api/auth/login", payload: { password: "short" } })).statusCode).toBe(401);
+    expect((await context.app.inject({ method: "POST", url: "/api/auth/login", payload: { username: TEST_USERNAME, password: 42 } })).statusCode).toBe(400);
+    expect((await context.app.inject({ method: "POST", url: "/api/auth/login", payload: { username: TEST_USERNAME, password: "short" } })).statusCode).toBe(401);
   });
 
   it("sets a httpOnly, SameSite=Lax session cookie on the right path", async () => {
-    const response = await context.app.inject({ method: "POST", url: "/api/auth/login", payload: { password: TEST_PASSWORD } });
+    const response = await context.app.inject({ method: "POST", url: "/api/auth/login", payload: { username: TEST_USERNAME, password: TEST_PASSWORD } });
 
     expect(response.statusCode).toBe(200);
     const cookie = response.cookies.find((entry) => entry.name === SESSION_COOKIE_NAME);
@@ -182,7 +182,7 @@ describe("auth routes", () => {
     const secureContext = await createTestContext({ SCRIBEDOG_COOKIE_SECURE: "" });
 
     try {
-      const response = await secureContext.app.inject({ method: "POST", url: "/api/auth/login", payload: { password: TEST_PASSWORD } });
+      const response = await secureContext.app.inject({ method: "POST", url: "/api/auth/login", payload: { username: TEST_USERNAME, password: TEST_PASSWORD } });
       expect(response.cookies[0]?.secure).toBe(true);
     } finally {
       await secureContext.cleanup();
