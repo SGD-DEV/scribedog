@@ -14,6 +14,7 @@ import { openSecretStore, type SecretStore } from "../src/secrets/secretStore.js
 import { openVault, type Vault } from "../src/vault/files.js";
 import { createVaultWatcher, type VaultWatcher } from "../src/vault/watcher.js";
 
+export const TEST_USERNAME = "testuser";
 export const TEST_PASSWORD = "correct horse battery";
 
 const silentLog = { info: () => {}, warn: () => {} };
@@ -54,12 +55,18 @@ export async function createTestContext(
   const vaultPath = await createTempVault();
   const config = loadConfig({
     SCRIBEDOG_VAULT_PATH: vaultPath,
+    SCRIBEDOG_INIT_USERNAME: TEST_USERNAME,
     SCRIBEDOG_INIT_PASSWORD: TEST_PASSWORD,
     SCRIBEDOG_COOKIE_SECURE: "false",
     ...env
   });
   const vault = await openVault(config.vaultPath);
-  const authStore = await openAuthStore({ vaultPath: vault.realPath, initPassword: config.initPassword, log: silentLog });
+  const authStore = await openAuthStore({ 
+    vaultPath: vault.realPath, 
+    initUsername: config.initUsername,
+    initPassword: config.initPassword, 
+    log: silentLog 
+  });
   const secrets = openSecretStore(vault.realPath);
   const tokens = await openTokenStore({ vaultPath: vault.realPath, log: silentLog });
   const watcher = options.watch ? createVaultWatcher(vault.realPath, silentLog) : null;
@@ -86,7 +93,7 @@ export async function createTestContext(
       const response = await app.inject({
         method: "POST",
         url: `${config.basePath}/api/auth/login`,
-        payload: { password }
+        payload: { username: TEST_USERNAME, password }
       });
 
       if (response.statusCode !== 200) {

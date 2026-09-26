@@ -25,7 +25,7 @@ export type AuthRoutesOptions = {
   requireSession: RequireSession;
 };
 
-type LoginBody = { password?: unknown };
+type LoginBody = { username?: unknown; password?: unknown };
 type ChangePasswordBody = { currentPassword?: unknown; newPassword?: unknown };
 type IssueTokenBody = { password?: unknown; name?: unknown };
 type TokenParams = { id: string };
@@ -93,8 +93,11 @@ export async function authRoutes(app: FastifyInstance, options: AuthRoutesOption
       schema: {
         body: {
           type: "object",
-          required: ["password"],
-          properties: { password: passwordProperty },
+          required: ["username", "password"],
+          properties: { 
+            username: { type: "string", minLength: 1, maxLength: 64 },
+            password: passwordProperty 
+          },
           additionalProperties: false
         }
       }
@@ -106,18 +109,19 @@ export async function authRoutes(app: FastifyInstance, options: AuthRoutesOption
         return reply;
       }
 
-      const { password } = request.body;
+      const { username, password } = request.body as { username: string; password: string };
 
       const fail = () => {
         const locked = throttle.recordFailure(throttleKey);
 
         request.log.warn({ ip: request.ip, lockedForSeconds: locked?.lockedForSeconds ?? 0 }, "failed login attempt");
 
-        // Same answer as a wrong password even for a policy violation: the
-        // policy is not a secret, but there is no reason to hand out a second,
-        // cheaper probe.
-        return reply.code(401).send({ error: "invalid_password", message: "Wrong password." });
+        return reply.code(401).send({ error: "invalid_credentials", message: "Wrong username or password." });
       };
+
+      if (!username || username.length < 1) {
+        return fail();
+      }
 
       try {
         assertPasswordPolicy(password);
@@ -129,7 +133,7 @@ export async function authRoutes(app: FastifyInstance, options: AuthRoutesOption
         throw error;
       }
 
-      if (!(await authStore.verifyPassword(password))) {
+      if (!(await authStore.verifyCredentials(username, password))) {
         return fail();
       }
 

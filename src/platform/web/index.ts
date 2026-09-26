@@ -197,9 +197,9 @@ export const platform: Platform = {
   knowledgeIndex: null,
   session: {
     getStatus: () => serverApi.session(),
-    login: async (password) => {
+    login: async (username, password) => {
       try {
-        await serverApi.login(password);
+        await serverApi.login(username, password);
       } catch (error) {
         if (error instanceof SessionError) {
           throw error;

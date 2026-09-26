@@ -4,6 +4,7 @@ import type { PlatformFeatures } from "@/platform/types";
 export type SettingsTab =
   | "application"
   | "appearance"
+  | "branding"
   | "fonts"
   | "shortcuts"
   | "ai"
@@ -22,7 +23,7 @@ export type SettingsGroup = "application" | "ai" | "folder";
  * its entries change meaning with the open folder.
  */
 export const SETTINGS_NAV: { group: SettingsGroup; tabs: SettingsTab[] }[] = [
-  { group: "application", tabs: ["application", "appearance", "fonts", "shortcuts", "account", "server"] },
+  { group: "application", tabs: ["application", "appearance", "branding", "fonts", "shortcuts", "account", "server"] },
   { group: "ai", tabs: ["ai", "assistants", "rag"] },
   { group: "folder", tabs: ["versioning", "vault"] }
 ];
@@ -37,7 +38,8 @@ export const SETTINGS_NAV: { group: SettingsGroup; tabs: SettingsTab[] }[] = [
 const SETTINGS_TAB_FEATURE: Partial<Record<SettingsTab, keyof PlatformFeatures>> = {
   rag: "knowledgeIndex",
   account: "session",
-  server: "remoteVaults"
+  server: "remoteVaults",
+  branding: "session"
 };
 
 export function isSettingsTabAvailable(tab: SettingsTab): boolean {
@@ -66,12 +68,14 @@ export const SELF_SAVING_TABS: SettingsTab[] = [
   "versioning",
   "vault",
   "account",
-  "server"
+  "server",
+  "branding"
 ];
 
 export const SETTINGS_TAB_LABEL_KEY: Record<SettingsTab, string> = {
   application: "settingsDialog.tabApplication",
   appearance: "settingsDialog.tabAppearance",
+  branding: "settingsDialog.tabBranding",
   fonts: "settingsDialog.tabFonts",
   shortcuts: "settingsDialog.tabShortcuts",
   ai: "settingsDialog.tabAi",

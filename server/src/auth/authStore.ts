@@ -16,6 +16,7 @@ const SESSION_SECRET_BYTES = 32;
 
 type AuthFile = {
   version: 1;
+  username: string;
   passwordHash: string;
   /**
    * Every session token carries the epoch it was issued under. Changing the
@@ -55,6 +56,8 @@ function isAuthFile(value: unknown): value is AuthFile {
 
   return (
     candidate.version === 1 &&
+    typeof candidate.username === "string" &&
+    candidate.username.length > 0 &&
     typeof candidate.passwordHash === "string" &&
     candidate.passwordHash.length > 0 &&
     typeof candidate.sessionEpoch === "number" &&
@@ -71,6 +74,7 @@ export type AuthStore = {
    * stops verifying.
    */
   readonly sessionEpoch: number;
+  verifyCredentials(username: string, password: string): Promise<boolean>;
   verifyPassword(password: string): Promise<boolean>;
   /**
    * Replaces the password and bumps the session epoch. The caller has already
@@ -82,6 +86,7 @@ export type AuthStore = {
 
 export type OpenAuthStoreOptions = {
   vaultPath: string;
+  initUsername: string | null;
   initPassword: string | null;
   log: { info(message: string): void; warn(message: string): void };
 };
@@ -135,10 +140,14 @@ export async function openAuthStore(options: OpenAuthStoreOptions): Promise<Auth
       );
     }
   } else {
-    if (options.initPassword === null) {
+    if (options.initUsername === null || options.initPassword === null) {
       throw new AuthSetupError(
-        "No password has been set for this vault yet. Set SCRIBEDOG_INIT_PASSWORD for the first start (it is only used until a password exists)."
+        "No credentials have been set for this vault yet. Set SCRIBEDOG_INIT_USERNAME and SCRIBEDOG_INIT_PASSWORD for the first start (they are only used until credentials exist)."
       );
+    }
+
+    if (options.initUsername.length < 3 || options.initUsername.length > 64) {
+      throw new AuthSetupError("SCRIBEDOG_INIT_USERNAME must be between 3 and 64 characters.");
     }
 
     try {
@@ -149,12 +158,13 @@ export async function openAuthStore(options: OpenAuthStoreOptions): Promise<Auth
 
     authFile = {
       version: 1,
+      username: options.initUsername,
       passwordHash: await hashPassword(options.initPassword),
       sessionEpoch: 1,
       updatedAt: new Date().toISOString()
     };
     await writeFileAtomically(authFilePath, `${JSON.stringify(authFile, null, 2)}\n`);
-    options.log.info("Initial password stored from SCRIBEDOG_INIT_PASSWORD. The variable can now be removed.");
+    options.log.info("Initial credentials stored from SCRIBEDOG_INIT_USERNAME and SCRIBEDOG_INIT_PASSWORD. The variables can now be removed.");
   }
 
   let current = authFile;
@@ -164,12 +174,21 @@ export async function openAuthStore(options: OpenAuthStoreOptions): Promise<Auth
     get sessionEpoch() {
       return current.sessionEpoch;
     },
-    verifyPassword: (password) => verifyPassword(password, current.passwordHash),
+    async verifyCredentials(username: string, password: string): Promise<boolean> {
+      if (username !== current.username) {
+        return false;
+      }
+      return verifyPassword(password, current.passwordHash);
+    },
+    async verifyPassword(password: string): Promise<boolean> {
+      return verifyPassword(password, current.passwordHash);
+    },
     async changePassword(newPassword: string) {
       assertPasswordPolicy(newPassword);
 
       const next: AuthFile = {
         version: 1,
+        username: current.username,
         passwordHash: await hashPassword(newPassword),
         sessionEpoch: current.sessionEpoch + 1,
         updatedAt: new Date().toISOString()

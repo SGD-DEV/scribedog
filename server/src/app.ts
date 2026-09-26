@@ -1,4 +1,5 @@
 import fastifyCookie from "@fastify/cookie";
+import fastifyMultipart from "@fastify/multipart";
 import fastifyWebsocket from "@fastify/websocket";
 import Fastify, { type FastifyInstance, type FastifyServerOptions } from "fastify";
 
@@ -9,6 +10,7 @@ import { createOriginGuard } from "./auth/origin.js";
 import { authRoutes } from "./auth/routes.js";
 import type { SessionConfig } from "./auth/session.js";
 import type { TokenStore } from "./auth/tokenStore.js";
+import { brandingRoutes } from "./branding/routes.js";
 import type { ServerConfig } from "./config.js";
 import { llmRoutes } from "./llm/proxyRoutes.js";
 import { secretRoutes } from "./secrets/routes.js";
@@ -77,6 +79,7 @@ export async function buildApp(deps: AppDependencies): Promise<FastifyInstance> 
   });
 
   await app.register(fastifyCookie);
+  await app.register(fastifyMultipart);
   await app.register(fastifyWebsocket);
 
   // CSRF, the half that does not rely on the browser honouring SameSite.
@@ -91,6 +94,7 @@ export async function buildApp(deps: AppDependencies): Promise<FastifyInstance> 
       scoped.get("/api/health", async () => ({ ok: true }));
 
       await scoped.register(authRoutes, { authStore, session, secrets, throttle, tokens, requireSession, prefix: "/api/auth" });
+      await scoped.register(brandingRoutes, { vaultPath: vault.realPath, requireSession, prefix: "/api" });
       await scoped.register(fileRoutes, { vault, requireSession, prefix: "/api" });
       await scoped.register(exportRoutes, { vault, requireSession, prefix: "/api" });
       await scoped.register(secretRoutes, { secrets, authStore, session, requireSession, prefix: "/api" });
