@@ -93,7 +93,7 @@ access keys would travel in clear text. The bundled Caddy provides HTTPS; see
 The notes are plain Markdown files in a folder on the host, on purpose:
 readable with any editor, greppable, free of lock-in. Consequences:
 
-- **Whoever can read the folder can read the notes**, whether ScribeDog is
+- **Whoever can read the folder can read the notes**, whether SYNDOC is
   running or not. Folder permissions keep other users of the host out; full
   disk encryption keeps out whoever takes the disk. See
   [Your data and backups](data-and-backups.md).

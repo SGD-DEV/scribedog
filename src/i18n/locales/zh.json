@@ -18,7 +18,7 @@
     "close": "关闭"
   },
   "app": {
-    "shellLabel": "ScribeDog 应用外壳",
+    "shellLabel": "SYNDOC 应用外壳",
     "workspaceLabel": "编辑器工作区",
     "documentAreaLabel": "文档区域",
     "navigateBack": "后退",
@@ -60,8 +60,8 @@
   "saveConflictDialog": {
     "eyebrow": "文件已在应用外被修改",
     "title": "覆盖磁盘上的更改？",
-    "descriptionWithName": "文件 {{fileLabel}} 在此期间已在 ScribeDog 之外被修改。",
-    "descriptionGeneric": "该文件在此期间已在 ScribeDog 之外被修改。",
+    "descriptionWithName": "文件 {{fileLabel}} 在此期间已在 SYNDOC 之外被修改。",
+    "descriptionGeneric": "该文件在此期间已在 SYNDOC 之外被修改。",
     "versioningOn": "覆盖前会先把磁盘上的版本保存到历史记录，之后可以对比两者。",
     "versioningOff": "版本管理已关闭，覆盖后另一个版本将丢失。",
     "overwrite": "覆盖"
@@ -299,7 +299,7 @@
     "agentMaxIterationsHint": "一个工作步骤最多可以调用多少次工具，超过就中止。任务大时调高，模型绕圈时调低。",
     "agentMaxPlanStepsLabel": "任务清单的步骤数",
     "agentMaxPlanStepsHint": "任务清单长度的上限。",
-    "localProviderBrowserHint": "{{provider}} 在此设备上运行，浏览器直接与它通信，因此它必须接受来自 {{origin}} 的请求：{{instruction}}。如果通过公网地址打开 ScribeDog，浏览器还会询问一次是否允许访问本地网络。",
+    "localProviderBrowserHint": "{{provider}} 在此设备上运行，浏览器直接与它通信，因此它必须接受来自 {{origin}} 的请求：{{instruction}}。如果通过公网地址打开 SYNDOC，浏览器还会询问一次是否允许访问本地网络。",
     "tabServer": "服务器",
     "restoreWorkingSet": "下次启动时恢复进行中的笔记",
     "restoreWorkingSetShort": "“进行中”列表按文件夹记住。",
@@ -309,7 +309,7 @@
     "autoAdmitWorkingSetHint": "未保存的更改无论如何都会保留，并在树中以黄点显示；折叠文件夹上的圆环表示其中有未保存的内容。"
   },
   "assistants": {
-    "defaultName": "ScribeDog (默认)",
+    "defaultName": "SYNDOC (默认)",
     "defaultDescription": "你忠实的写作伙伴。",
     "addAssistant": "添加助手",
     "editAssistant": "编辑助手",
@@ -329,7 +329,7 @@
   },
   "themeBuilder": {
     "title": "主题编辑器",
-    "intro": "主题由几种基础颜色组成，悬停、选中、边框和阴影由 ScribeDog 从中推算。自带的主题都是模板：复制其中一个即可开始。",
+    "intro": "主题由几种基础颜色组成，悬停、选中、边框和阴影由 SYNDOC 从中推算。自带的主题都是模板：复制其中一个即可开始。",
     "theme": "主题",
     "templates": "模板",
     "customThemes": "自定义主题",
@@ -410,7 +410,7 @@
     "importFile": "导入文件",
     "importClipboard": "从剪贴板导入",
     "importFileTitle": "导入主题",
-    "importFileFilter": "ScribeDog 主题",
+    "importFileFilter": "SYNDOC 主题",
     "pasteLabel": "粘贴主题 JSON",
     "pastePlaceholder": "此处无法直接读取剪贴板。请用 Ctrl+V 粘贴主题。",
     "pasteImport": "导入",
@@ -423,8 +423,8 @@
     "importReadFailed": "无法读取文件：{{error}}",
     "importErrors": {
       "invalidJson": "这不是有效的 JSON。",
-      "notATheme": "这不是 ScribeDog 主题。",
-      "unsupportedVersion": "此主题来自更新版本的 ScribeDog。请更新应用后再导入。",
+      "notATheme": "这不是 SYNDOC 主题。",
+      "unsupportedVersion": "此主题来自更新版本的 SYNDOC。请更新应用后再导入。",
       "invalidTheme": "主题不完整或包含无效值（颜色只能是 #rrggbb）。"
     },
     "previewLabel": "主题预览",
@@ -513,13 +513,13 @@
       "whatTitle": "它有什么用？",
       "whatBody": "你可以向 AI 询问记在笔记中某处的内容，即使那个文件根本没有打开。例如：“我和客户 A 就交付日期谈定了什么？”AI 会搜索你的笔记，根据其中写的内容作答，并在下方列出信息的来源文件。点击即可直接跳转到相应位置。",
       "howTitle": "它是如何工作的？",
-      "howBody": "ScribeDog 会在你的文档中搜索问题里的词语，并把最贴切的段落交给 AI 阅读。搜索本身完全在你的设备上运行——不会预先处理、上传或长期保存任何内容。你的笔记不会被改动，只会被读取。",
+      "howBody": "SYNDOC 会在你的文档中搜索问题里的词语，并把最贴切的段落交给 AI 阅读。搜索本身完全在你的设备上运行——不会预先处理、上传或长期保存任何内容。你的笔记不会被改动，只会被读取。",
       "dataTitle": "我的文字会怎样被处理？",
-      "dataBody": "只有针对你的问题找到的段落会交给 AI，而不是整个文件夹。它们的去向取决于你在“AI 设置”中的配置：若使用运行在本机上的服务（例如 Ollama），任何内容都不会离开这台电脑；若使用互联网上的服务商，找到的段落会被传送过去。只要你不开启知识库，这些都不会发生——而且任何内容都绝不会发送给 ScribeDog 本身。",
+      "dataBody": "只有针对你的问题找到的段落会交给 AI，而不是整个文件夹。它们的去向取决于你在“AI 设置”中的配置：若使用运行在本机上的服务（例如 Ollama），任何内容都不会离开这台电脑；若使用互联网上的服务商，找到的段落会被传送过去。只要你不开启知识库，这些都不会发生——而且任何内容都绝不会发送给 SYNDOC 本身。",
       "undoTitle": "如何撤销？",
       "undoBody": "只需关闭上方的开关。AI 会立即恢复为只能看到你打开的文档。你也可以通过取消勾选来永久排除个别文件夹——这样私人文件夹被排除在外，其余部分仍可被检索。你的笔记本身绝不会因此被修改或删除。",
-      "howBodySemantic": "ScribeDog 会把你的笔记拆分成段落，并为每个段落计算一种“内容摘要”，从而可以按含义搜索，而不只是按确切的词（专业术语叫 Embeddings）。这些摘要保存在你自己文件夹内的 .scribedog 文件夹中的一个文件里。你问题中的词语仍会被搜索，两种结果会合并在一起。",
-      "dataBodySemantic": "准备时，已勾选文件夹中的所有文件都会被完整发送到你为知识库设置的服务；之后只发送有改动的文件。回答时，找到的文本片段还会发送给 AI。如果服务在你自己的设备上运行（例如 Ollama），这些内容不会离开电脑；如果是互联网上的提供商，则会。只要你不启用知识库，这些都不会发生——并且任何时候都不会向 ScribeDog 本身发送任何内容，也不会用于训练。",
+      "howBodySemantic": "SYNDOC 会把你的笔记拆分成段落，并为每个段落计算一种“内容摘要”，从而可以按含义搜索，而不只是按确切的词（专业术语叫 Embeddings）。这些摘要保存在你自己文件夹内的 .scribedog 文件夹中的一个文件里。你问题中的词语仍会被搜索，两种结果会合并在一起。",
+      "dataBodySemantic": "准备时，已勾选文件夹中的所有文件都会被完整发送到你为知识库设置的服务；之后只发送有改动的文件。回答时，找到的文本片段还会发送给 AI。如果服务在你自己的设备上运行（例如 Ollama），这些内容不会离开电脑；如果是互联网上的提供商，则会。只要你不启用知识库，这些都不会发生——并且任何时候都不会向 SYNDOC 本身发送任何内容，也不会用于训练。",
       "undoBodySemantic": "关掉上方的开关，AI 立刻就只能看到你当前打开的文档。使用“删除已保存的数据”也会删除已准备的文件；它位于你自己文件夹内的 .scribedog 文件夹中，删除该文件夹即可清除全部内容。你的笔记本身永远不会被修改或删除。"
     },
     "warningCloudEmbedding": "注意：{{provider}} 不在本机运行。准备笔记时，你的笔记会离开这台电脑。",
@@ -559,7 +559,7 @@
     },
     "rebuild": {
       "title": "你的知识库需要重新建立",
-      "body": "你更换了让笔记可被搜索的模型。ScribeDog 此前保存的内容无法被新模型使用——它将被删除并重新创建。",
+      "body": "你更换了让笔记可被搜索的模型。SYNDOC 此前保存的内容无法被新模型使用——它将被删除并重新创建。",
       "transfer": "所有已勾选文件夹中的文件都会被再次完整读取并发送到 {{service}}。",
       "notesUnchanged": "你的笔记本身不会因此改变。",
       "count": "涉及的文件：{{files}}",
@@ -1000,7 +1000,7 @@
   },
   "updateNotification": {
     "title": "有可用更新 {{version}}",
-    "body": "ScribeDog 的新版本已准备就绪。",
+    "body": "SYNDOC 的新版本已准备就绪。",
     "install": "安装",
     "installing": "安装中……",
     "installError": "无法安装更新。",
@@ -1175,8 +1175,8 @@
     "pageBreakBetweenChapters": "每章另起一页"
   },
   "login": {
-    "title": "ScribeDog",
-    "lead": "使用此 ScribeDog 服务器的密码登录。",
+    "title": "SYNDOC",
+    "lead": "使用此 SYNDOC 服务器的密码登录。",
     "sessionExpired": "会话已过期。请重新登录以继续；未保存的更改会保留。",
     "password": "密码",
     "submit": "登录",
@@ -1207,7 +1207,7 @@
     "certificateDownload": "下载证书"
   },
   "platform": {
-    "notAvailable": "此功能在这个版本的 ScribeDog 中不可用。",
+    "notAvailable": "此功能在这个版本的 SYNDOC 中不可用。",
     "serverNotYetAvailable": "此操作在服务器版中暂不可用。",
     "pathOutsideVault": "“{{path}}”位于笔记库之外。"
   },
@@ -1247,8 +1247,8 @@
     "urlMustBeHttps": "服务器地址必须使用 HTTPS；只有 localhost 可以使用普通 HTTP。",
     "unknownServer": "此服务器不在列表中。",
     "notSignedIn": "此服务器没有保存的访问密钥。",
-    "defaultDeviceName": "ScribeDog 桌面版",
-    "defaultDeviceNameOn": "{{os}} 上的 ScribeDog",
+    "defaultDeviceName": "SYNDOC 桌面版",
+    "defaultDeviceNameOn": "{{os}} 上的 SYNDOC",
     "settingsTitle": "服务器保管库",
     "settingsHint": "此应用可以打开保管库的服务器。在侧边栏的保管库菜单中添加。每个服务器会列出持有访问密钥的设备；丢失的设备可在那里撤销。",
     "none": "尚未添加任何服务器。",

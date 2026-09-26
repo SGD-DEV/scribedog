@@ -111,7 +111,7 @@ Back up the folder with restic, kopia or whatever you use, encrypted and with
 history, from a cron job on the host. Backing up while the app runs is fine.
 
 **Are the notes encrypted?**
-Not by ScribeDog: they are plain Markdown on purpose. Use full-disk
+Not by SYNDOC: they are plain Markdown on purpose. Use full-disk
 encryption or gocryptfs below the folder if the box's location calls for it.
 API keys and password are protected (encrypted, hashed).
 
@@ -129,7 +129,7 @@ path above the note. The icons are stored in the vault, in
 `.scribedog/icons.json`, not in the notes themselves, so setting one is not
 an edit: no unsaved changes, no new version, and nothing shows up in an
 export or in Git. Copy the folder somewhere else and the icons come along;
-rename a file outside ScribeDog and its icon is gone, the same way its place
+rename a file outside SYNDOC and its icon is gone, the same way its place
 in a manual sort order is.
 
 **What is the "In progress" list above the file tree?**

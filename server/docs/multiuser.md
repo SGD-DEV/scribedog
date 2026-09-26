@@ -1,6 +1,6 @@
 # Multiple users on one host
 
-ScribeDog has one password and one vault per instance, on purpose: there are
+SYNDOC has one password and one vault per instance, on purpose: there are
 no accounts, no sharing rules and no permissions to get wrong. Two or more
 people on one box therefore get one instance each, every one under its own
 path prefix, behind a single shared Caddy.
@@ -27,9 +27,9 @@ Pick the section below that matches your situation.
 
 ```bash
 mkdir -p scribedog-multi && cd scribedog-multi
-curl -fsSL -o docker-compose.yml https://raw.githubusercontent.com/snooky234/scribedog/main/server/examples/multi-instance/docker-compose.yml
-curl -fsSL -o Caddyfile https://raw.githubusercontent.com/snooky234/scribedog/main/server/examples/multi-instance/Caddyfile
-curl -fsSL -o .env https://raw.githubusercontent.com/snooky234/scribedog/main/server/examples/multi-instance/.env.example
+curl -fsSL -o docker-compose.yml https://raw.githubusercontent.com/SGD-DEV/scribedog/main/server/examples/multi-instance/docker-compose.yml
+curl -fsSL -o Caddyfile https://raw.githubusercontent.com/SGD-DEV/scribedog/main/server/examples/multi-instance/Caddyfile
+curl -fsSL -o .env https://raw.githubusercontent.com/SGD-DEV/scribedog/main/server/examples/multi-instance/.env.example
 ```
 
 Starting with a different number of people than two? Do this next, before

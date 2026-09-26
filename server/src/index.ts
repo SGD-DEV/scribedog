@@ -70,7 +70,7 @@ async function main(): Promise<void> {
       cookieSecure: config.cookieSecure,
       webDistDir: config.webDistDir
     },
-    "ScribeDog Server ready"
+    "SYNDOC Server ready"
   );
 
   if (!config.cookieSecure) {

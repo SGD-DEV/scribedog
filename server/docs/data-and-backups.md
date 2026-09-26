@@ -63,7 +63,7 @@ people editing the same vault never see each other's half-written text.
 ## Backups
 
 Because it is a plain folder, back it up like any other folder with the tool
-you already use; ScribeDog brings no backup feature of its own. Two things
+you already use; SYNDOC brings no backup feature of its own. Two things
 matter in the choice: the copy should be encrypted (the notes are plain
 Markdown), and it should keep history (a note deleted by mistake is only in
 yesterday's copy). [restic](https://restic.net) and [kopia](https://kopia.io)
@@ -105,6 +105,6 @@ If that matters where the box stands, encrypt below the folder rather than
 in it: full-disk encryption (LUKS on a server, the SD card of a Raspberry Pi
 included) or a transparent layer such as
 [gocryptfs](https://nuetzlich.net/gocryptfs/) mounted at the bind-mount path.
-Both are invisible to ScribeDog. What no file system setting covers is root
+Both are invisible to SYNDOC. What no file system setting covers is root
 on the same host, who can read everything by definition; see
 [Security](security.md).

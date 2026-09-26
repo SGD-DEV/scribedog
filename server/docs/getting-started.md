@@ -27,9 +27,9 @@ the compose stack needs:
 
 ```bash
 mkdir -p scribedog-server/caddy && cd scribedog-server
-curl -fsSL -o docker-compose.yml https://raw.githubusercontent.com/snooky234/scribedog/main/server/docker-compose.yml
-curl -fsSL -o caddy/Caddyfile https://raw.githubusercontent.com/snooky234/scribedog/main/server/caddy/Caddyfile
-curl -fsSL -o .env https://raw.githubusercontent.com/snooky234/scribedog/main/server/.env.example
+curl -fsSL -o docker-compose.yml https://raw.githubusercontent.com/SGD-DEV/scribedog/main/server/docker-compose.yml
+curl -fsSL -o caddy/Caddyfile https://raw.githubusercontent.com/SGD-DEV/scribedog/main/server/caddy/Caddyfile
+curl -fsSL -o .env https://raw.githubusercontent.com/SGD-DEV/scribedog/main/server/.env.example
 ```
 
 Open `.env` and set three things:
@@ -50,7 +50,7 @@ Open `.env` and set three things:
 `SCRIBEDOG_IMAGE` is already set to the current version, so there is nothing
 to change there for the latest release. Two reasons you might still touch it:
 you would rather pull from Docker Hub than GHCR (same image, set it to
-`snooky234/scribedog-server:0.16.0`, no registry host needed in the name), or
+`SGD-DEV/scribedog-server:0.16.0`, no registry host needed in the name), or
 you want an older version on purpose (pin that tag instead).
 
 Then start it:
@@ -63,7 +63,7 @@ docker compose up -d
 **Option 2: build from source** instead, cloning the whole repository:
 
 ```bash
-git clone https://github.com/snooky234/scribedog.git
+git clone https://github.com/SGD-DEV/scribedog.git
 cd scribedog/server
 cp .env.example .env
 ```
@@ -83,7 +83,7 @@ minutes on a normal PC and considerably longer, sometimes tight on RAM, on a
 Pi.
 
 Either way, this creates `./scribedog-data` if it is not there and starts two
-containers: the ScribeDog server and Caddy, which provides HTTPS.
+containers: the SYNDOC server and Caddy, which provides HTTPS.
 
 ## Troubleshooting
 
@@ -112,10 +112,10 @@ it with its own local certificate authority (CA), because there is no public
 domain to get a certificate for. You can accept the warning, or import the
 CA once so every browser on the device trusts it (and, if you use it, the
 [desktop app](desktop-app.md), which needs the CA in the system store). Do
-this on each device you use ScribeDog from, not just once: on the device in
+this on each device you use SYNDOC from, not just once: on the device in
 question, download it from Settings, Account, "Download certificate" (the
 button is only there while Caddy's own CA is in use; or open
-`https://<host>/scribedog-ca.crt` directly, same host and port as ScribeDog
+`https://<host>/scribedog-ca.crt` directly, same host and port as SYNDOC
 itself), then add `scribedog-ca.crt` to the trust store:
 
 | Where | How |
@@ -145,7 +145,7 @@ signed in for 60 days of use. More in [Phones and tablets](phones-and-tablets.md
 
 ## On your computer, in the desktop app
 
-If you use ScribeDog on the desktop, you do not have to use the browser at
+If you use SYNDOC on the desktop, you do not have to use the browser at
 all: the desktop app can open the server's vault directly, with AI and
 dictation running on your computer. See
 [The desktop app as a client](desktop-app.md).

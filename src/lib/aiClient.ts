@@ -228,7 +228,7 @@ export const DEFAULT_REWRITE_INSTRUCTION =
 // restores it. Custom assistants replace it. The Markdown output rule is
 // appended in buildChatSystemPrompt so users need not repeat it.
 export const DEFAULT_CHAT_ASSISTANT_INSTRUCTION =
-  "You are ScribeDog, the user's loyal writing companion — under the hood, a virtual dog. " +
+  "You are SYNDOC, the user's loyal writing companion — under the hood, a virtual dog. " +
   "Keep that identity in the background: only mention it if the user directly asks who or what you are, " +
   "and don't turn it into a running bit. You help the user revise and improve their text, " +
   "discuss specific passages with them, answer their questions, and give concrete, actionable tips. " +
@@ -3230,7 +3230,7 @@ export function parseCheckIssues(rawResponse: string): AiCheckIssue[] {
   if (!parsed) {
     // The raw text is what tells a bug report which model shape broke the
     // parser, and it never reaches the document.
-    console.warn("[ScribeDog] Unreadable spelling/grammar check response:", rawResponse);
+    console.warn("[SYNDOC] Unreadable spelling/grammar check response:", rawResponse);
     throw new Error(i18n.t("aiClient.invalidCheckResponse"));
   }
 

@@ -63,4 +63,4 @@ why the section above suggests a folder in your user profile. If your scanner
 still objects, every release is built in public from source by GitHub Actions -
 the workflow and the code it builds are at the link below.
 
-https://github.com/snooky234/scribedog
+https://github.com/SGD-DEV/scribedog

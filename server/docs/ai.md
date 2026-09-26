@@ -59,7 +59,7 @@ request fails.
 page call another server if that server says so (CORS), and the local model
 servers only say so for pages served from localhost unless told otherwise.
 The settings dialog shows the exact origin to allow (`https://<host>` as you
-open ScribeDog, with the port if it is not 443):
+open SYNDOC, with the port if it is not 443):
 
 | Server | What to do |
 | --- | --- |

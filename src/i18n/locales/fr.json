@@ -18,7 +18,7 @@
     "close": "Fermer"
   },
   "app": {
-    "shellLabel": "Interface de l'application ScribeDog",
+    "shellLabel": "Interface de l'application SYNDOC",
     "workspaceLabel": "Espace de travail de l'éditeur",
     "documentAreaLabel": "Zone du document",
     "navigateBack": "Retour",
@@ -60,8 +60,8 @@
   "saveConflictDialog": {
     "eyebrow": "Fichier modifié en dehors de l'application",
     "title": "Écraser les modifications sur le disque ?",
-    "descriptionWithName": "Le fichier {{fileLabel}} a été modifié en dehors de ScribeDog entre-temps.",
-    "descriptionGeneric": "Le fichier a été modifié en dehors de ScribeDog entre-temps.",
+    "descriptionWithName": "Le fichier {{fileLabel}} a été modifié en dehors de SYNDOC entre-temps.",
+    "descriptionGeneric": "Le fichier a été modifié en dehors de SYNDOC entre-temps.",
     "versioningOn": "En écrasant, la version du disque est d'abord enregistrée dans l'historique, vous pourrez ensuite comparer les deux.",
     "versioningOff": "Le versionnage est désactivé, l'autre version sera perdue si vous écrasez.",
     "overwrite": "Écraser"
@@ -300,7 +300,7 @@
     "agentMaxIterationsHint": "Nombre maximal d’appels d’outil pour une étape avant interruption. Plus élevé pour de grosses demandes, plus bas si un modèle tourne en rond.",
     "agentMaxPlanStepsLabel": "Étapes par liste de tâches",
     "agentMaxPlanStepsHint": "Limite supérieure de la longueur d’une liste de tâches.",
-    "localProviderBrowserHint": "{{provider}} fonctionne sur cet appareil et le navigateur lui parle directement ; il doit donc accepter les requêtes de {{origin}} : {{instruction}}. Si vous ouvrez ScribeDog via une adresse publique, le navigateur demande aussi une fois l'accès au réseau local.",
+    "localProviderBrowserHint": "{{provider}} fonctionne sur cet appareil et le navigateur lui parle directement ; il doit donc accepter les requêtes de {{origin}} : {{instruction}}. Si vous ouvrez SYNDOC via une adresse publique, le navigateur demande aussi une fois l'accès au réseau local.",
     "tabServer": "Serveurs",
     "restoreWorkingSet": "Restaurer les notes en cours au prochain démarrage",
     "restoreWorkingSetShort": "La liste « En cours » est mémorisée par dossier.",
@@ -310,7 +310,7 @@
     "autoAdmitWorkingSetHint": "Les modifications non enregistrées sont conservées dans tous les cas et signalées par le point jaune dans l'arborescence ; un anneau sur un dossier replié indique qu'il contient quelque chose de non enregistré."
   },
   "assistants": {
-    "defaultName": "ScribeDog (Par défaut)",
+    "defaultName": "SYNDOC (Par défaut)",
     "defaultDescription": "Votre fidèle compagnon d'écriture.",
     "addAssistant": "Ajouter un assistant",
     "editAssistant": "Modifier l'assistant",
@@ -330,7 +330,7 @@
   },
   "themeBuilder": {
     "title": "Créateur de thèmes",
-    "intro": "Un thème se compose de quelques couleurs de base ; ScribeDog en dérive le survol, la sélection, les bordures et les ombres. Les thèmes fournis sont des modèles : dupliquez-en un pour commencer.",
+    "intro": "Un thème se compose de quelques couleurs de base ; SYNDOC en dérive le survol, la sélection, les bordures et les ombres. Les thèmes fournis sont des modèles : dupliquez-en un pour commencer.",
     "theme": "Thème",
     "templates": "Modèles",
     "customThemes": "Thèmes personnels",
@@ -411,7 +411,7 @@
     "importFile": "Importer un fichier",
     "importClipboard": "Depuis le presse-papiers",
     "importFileTitle": "Importer un thème",
-    "importFileFilter": "Thème ScribeDog",
+    "importFileFilter": "Thème SYNDOC",
     "pasteLabel": "Coller le JSON du thème",
     "pastePlaceholder": "Le presse-papiers ne peut pas être lu directement ici. Collez le thème avec Ctrl+V.",
     "pasteImport": "Importer",
@@ -424,8 +424,8 @@
     "importReadFailed": "Impossible de lire le fichier : {{error}}",
     "importErrors": {
       "invalidJson": "Ce n'est pas du JSON valide.",
-      "notATheme": "Ce n'est pas un thème ScribeDog.",
-      "unsupportedVersion": "Ce thème vient d'une version plus récente de ScribeDog. Mettez l'application à jour pour l'importer.",
+      "notATheme": "Ce n'est pas un thème SYNDOC.",
+      "unsupportedVersion": "Ce thème vient d'une version plus récente de SYNDOC. Mettez l'application à jour pour l'importer.",
       "invalidTheme": "Le thème est incomplet ou contient des valeurs invalides (couleurs uniquement en #rrggbb)."
     },
     "previewLabel": "Aperçu du thème",
@@ -514,13 +514,13 @@
       "whatTitle": "À quoi cela me sert-il ?",
       "whatBody": "Vous pouvez interroger l'IA sur des choses notées quelque part dans vos notes, même si le fichier concerné n'est pas ouvert. Par exemple : « Qu'avais-je convenu avec le client A au sujet du délai de livraison ? » L'IA cherche dans vos notes, répond à partir de ce qui y est écrit et affiche en dessous les fichiers dont elle tient l'information. Un clic vous y conduit directement.",
       "howTitle": "Comment cela fonctionne-t-il ?",
-      "howBody": "ScribeDog cherche dans vos documents les mots de votre question et fournit à l'IA les passages les plus pertinents à lire. La recherche elle-même s'exécute entièrement sur votre appareil : rien n'est préparé, téléversé ni stocké durablement. Vos notes restent inchangées ; elles sont seulement lues.",
+      "howBody": "SYNDOC cherche dans vos documents les mots de votre question et fournit à l'IA les passages les plus pertinents à lire. La recherche elle-même s'exécute entièrement sur votre appareil : rien n'est préparé, téléversé ni stocké durablement. Vos notes restent inchangées ; elles sont seulement lues.",
       "dataTitle": "Qu'advient-il de mes textes ?",
-      "dataBody": "Seuls les passages trouvés pour votre question sont transmis à l'IA, et non l'ensemble de votre dossier. Leur destination dépend de ce que vous avez réglé dans « Paramètres IA » : avec un service sur votre propre appareil (comme Ollama), rien ne quitte l'ordinateur. Avec un fournisseur sur internet, les passages trouvés y sont transmis. Rien de tout cela ne se produit sans que vous activiez la base de connaissances — et rien n'est jamais envoyé à ScribeDog lui-même.",
+      "dataBody": "Seuls les passages trouvés pour votre question sont transmis à l'IA, et non l'ensemble de votre dossier. Leur destination dépend de ce que vous avez réglé dans « Paramètres IA » : avec un service sur votre propre appareil (comme Ollama), rien ne quitte l'ordinateur. Avec un fournisseur sur internet, les passages trouvés y sont transmis. Rien de tout cela ne se produit sans que vous activiez la base de connaissances — et rien n'est jamais envoyé à SYNDOC lui-même.",
       "undoTitle": "Comment revenir en arrière ?",
       "undoBody": "Désactivez simplement l'interrupteur ci-dessus. L'IA ne voit alors immédiatement plus que le document ouvert. Vous pouvez aussi exclure durablement certains dossiers en décochant leur case : les dossiers privés restent ainsi à l'écart pendant que le reste demeure consultable. Vos notes elles-mêmes ne sont jamais modifiées ni supprimées.",
-      "howBodySemantic": "ScribeDog découpe vos notes en passages et fait calculer pour chacun une sorte de résumé, ce qui permet de chercher par le sens et non seulement par les mots exacts (le terme technique est « embeddings »). Ces résumés se trouvent dans un fichier du dossier .scribedog, à l'intérieur de votre propre dossier. Les mots de votre question sont également recherchés, et les deux résultats sont fusionnés.",
-      "dataBodySemantic": "Pour la préparation, tous les fichiers des dossiers cochés sont envoyés intégralement au service configuré pour la base de connaissances ; ensuite, seuls les fichiers modifiés le sont. Lors des réponses, les passages trouvés sont en plus envoyés à l'IA. Avec un service sur votre propre appareil (comme Ollama), rien ne quitte l'ordinateur ; avec un fournisseur sur Internet, si. Rien de tout cela n'a lieu tant que vous n'activez pas la base de connaissances — et rien n'est jamais envoyé à ScribeDog lui-même, ni pour l'entraînement.",
+      "howBodySemantic": "SYNDOC découpe vos notes en passages et fait calculer pour chacun une sorte de résumé, ce qui permet de chercher par le sens et non seulement par les mots exacts (le terme technique est « embeddings »). Ces résumés se trouvent dans un fichier du dossier .scribedog, à l'intérieur de votre propre dossier. Les mots de votre question sont également recherchés, et les deux résultats sont fusionnés.",
+      "dataBodySemantic": "Pour la préparation, tous les fichiers des dossiers cochés sont envoyés intégralement au service configuré pour la base de connaissances ; ensuite, seuls les fichiers modifiés le sont. Lors des réponses, les passages trouvés sont en plus envoyés à l'IA. Avec un service sur votre propre appareil (comme Ollama), rien ne quitte l'ordinateur ; avec un fournisseur sur Internet, si. Rien de tout cela n'a lieu tant que vous n'activez pas la base de connaissances — et rien n'est jamais envoyé à SYNDOC lui-même, ni pour l'entraînement.",
       "undoBodySemantic": "Désactivez l'interrupteur ci-dessus : l'IA ne voit alors plus que le document ouvert. « Supprimer les données enregistrées » efface aussi le fichier préparé ; il se trouve dans le dossier .scribedog à l'intérieur de votre propre dossier, et supprimer ce dossier supprime tout. Vos notes elles-mêmes ne sont jamais modifiées ni supprimées."
     },
     "warningCloudEmbedding": "Attention : {{provider}} ne fonctionne pas sur cet appareil. La préparation envoie donc vos notes hors de votre ordinateur.",
@@ -560,7 +560,7 @@
     },
     "rebuild": {
       "title": "Votre base de connaissances doit être reconstruite",
-      "body": "Vous avez changé le modèle qui rend vos notes consultables. Ce que ScribeDog a enregistré jusqu'ici ne peut pas être utilisé par le nouveau modèle — cela sera supprimé puis recréé.",
+      "body": "Vous avez changé le modèle qui rend vos notes consultables. Ce que SYNDOC a enregistré jusqu'ici ne peut pas être utilisé par le nouveau modèle — cela sera supprimé puis recréé.",
       "transfer": "Tous les fichiers des dossiers cochés seront à nouveau lus intégralement et envoyés à {{service}}.",
       "notesUnchanged": "Vos notes elles-mêmes ne changent pas.",
       "count": "Fichiers concernés : {{files}}",
@@ -1001,7 +1001,7 @@
   },
   "updateNotification": {
     "title": "Mise à jour {{version}} disponible",
-    "body": "Une nouvelle version de ScribeDog est prête.",
+    "body": "Une nouvelle version de SYNDOC est prête.",
     "install": "Installer",
     "installing": "Installation …",
     "installError": "La mise à jour n'a pas pu être installée.",
@@ -1176,8 +1176,8 @@
     "pageBreakBetweenChapters": "Commencer chaque chapitre sur une nouvelle page"
   },
   "login": {
-    "title": "ScribeDog",
-    "lead": "Connectez-vous avec le mot de passe de ce serveur ScribeDog.",
+    "title": "SYNDOC",
+    "lead": "Connectez-vous avec le mot de passe de ce serveur SYNDOC.",
     "sessionExpired": "Votre session a expiré. Reconnectez-vous pour continuer ; les modifications non enregistrées sont conservées.",
     "password": "Mot de passe",
     "submit": "Se connecter",
@@ -1208,7 +1208,7 @@
     "certificateDownload": "Télécharger le certificat"
   },
   "platform": {
-    "notAvailable": "Cette fonction n'est pas disponible dans cette édition de ScribeDog.",
+    "notAvailable": "Cette fonction n'est pas disponible dans cette édition de SYNDOC.",
     "serverNotYetAvailable": "Cette action n'est pas encore disponible dans l'édition serveur.",
     "pathOutsideVault": "« {{path}} » se trouve en dehors du coffre."
   },
@@ -1248,8 +1248,8 @@
     "urlMustBeHttps": "L'adresse du serveur doit utiliser HTTPS ; seul localhost peut utiliser HTTP.",
     "unknownServer": "Ce serveur n'est pas dans la liste.",
     "notSignedIn": "Aucune clé d'accès n'est enregistrée pour ce serveur.",
-    "defaultDeviceName": "ScribeDog bureau",
-    "defaultDeviceNameOn": "ScribeDog sur {{os}}",
+    "defaultDeviceName": "SYNDOC bureau",
+    "defaultDeviceNameOn": "SYNDOC sur {{os}}",
     "settingsTitle": "Coffres serveur",
     "settingsHint": "Serveurs sur lesquels cette application peut ouvrir un coffre. Ajoutez-en un depuis le menu des coffres de la barre latérale. Chaque serveur liste les appareils détenant une clé d'accès ; révoquez-y un appareil perdu.",
     "none": "Aucun serveur n'a encore été ajouté.",

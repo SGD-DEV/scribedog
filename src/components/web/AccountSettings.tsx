@@ -33,7 +33,7 @@ import { platform, SessionError } from "@/platform";
 const CA_CERTIFICATE_PATH = "/scribedog-ca.crt";
 
 const CA_CERTIFICATE_GUIDE_URL =
-  "https://github.com/snooky234/scribedog/blob/main/server/docs/getting-started.md#the-certificate-warning";
+  "https://github.com/SGD-DEV/scribedog/blob/main/server/docs/getting-started.md#the-certificate-warning";
 
 async function isCaCertificateServed(signal: AbortSignal): Promise<boolean> {
   try {

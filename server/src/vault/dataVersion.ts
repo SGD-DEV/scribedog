@@ -106,7 +106,7 @@ export async function ensureDataVersion(vaultPath: string, log: DataVersionLog):
 
   if (found > CURRENT_DATA_VERSION) {
     throw new DataVersionError(
-      `This data folder was written by a newer ScribeDog server (data version ${found}); this one understands version ${CURRENT_DATA_VERSION}. ` +
+      `This data folder was written by a newer SYNDOC server (data version ${found}); this one understands version ${CURRENT_DATA_VERSION}. ` +
         "Start the newer image again, or restore a backup of the folder from before the upgrade."
     );
   }

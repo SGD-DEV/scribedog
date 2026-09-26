@@ -1,6 +1,6 @@
 # The desktop app as a client
 
-The ScribeDog desktop app can open a vault that lives on a ScribeDog server,
+The SYNDOC desktop app can open a vault that lives on a SYNDOC server,
 the same way it opens a folder on your disk. Your notes stay on the server;
 everything else, including AI with a local model, dictation, import and
 export, keeps running on your computer. The browser is not involved.
@@ -21,7 +21,7 @@ the same server.
    for this computer, and is not stored.
 4. Optionally give the vault a name for the sidebar, and check the device
    name (how this computer appears in the server's list of signed-in
-   devices; "ScribeDog on Windows" by default).
+   devices; "SYNDOC on Windows" by default).
 5. **Add.** The vault opens, and from now on it is in the vault menu next to
    your local folders, marked with a server icon. The app reopens it at
    startup like any other last-used vault.
