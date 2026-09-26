@@ -65,6 +65,22 @@ function isAuthFile(value: unknown): value is AuthFile {
   );
 }
 
+type LegacyAuthFile = Omit<AuthFile, "username">;
+
+/** An auth file from before usernames: everything valid except the missing username. */
+function isLegacyAuthFile(value: unknown): value is LegacyAuthFile {
+  return (
+    !!value &&
+    typeof value === "object" &&
+    !("username" in value) &&
+    isAuthFile({ ...(value as Record<string, unknown>), username: "legacy" })
+  );
+}
+
+function isValidUsername(username: string): boolean {
+  return username.length >= 3 && username.length <= 64;
+}
+
 export type AuthStore = {
   /** Secret behind the HMAC on session tokens; generated once per vault. */
   readonly sessionSecret: Buffer;
@@ -128,11 +144,23 @@ export async function openAuthStore(options: OpenAuthStoreOptions): Promise<Auth
   let authFile: AuthFile;
 
   if (existing !== null) {
-    if (!isAuthFile(existing)) {
+    if (isAuthFile(existing)) {
+      authFile = existing;
+    } else if (isLegacyAuthFile(existing)) {
+      // Written before logins had a username. Keep the password hash and the
+      // session epoch, take the username from SCRIBEDOG_INIT_USERNAME.
+      if (options.initUsername === null || !isValidUsername(options.initUsername)) {
+        throw new AuthSetupError(
+          `${authFilePath} has no username yet. Set SCRIBEDOG_INIT_USERNAME (3 to 64 characters) to add one; the password stays the same.`
+        );
+      }
+
+      authFile = { ...existing, username: options.initUsername, updatedAt: new Date().toISOString() };
+      await writeFileAtomically(authFilePath, `${JSON.stringify(authFile, null, 2)}\n`);
+      options.log.info("Added the username from SCRIBEDOG_INIT_USERNAME to the existing credentials.");
+    } else {
       throw new AuthSetupError(`${authFilePath} is not a valid auth file.`);
     }
-
-    authFile = existing;
 
     if (options.initPassword !== null) {
       options.log.warn(
@@ -146,7 +174,7 @@ export async function openAuthStore(options: OpenAuthStoreOptions): Promise<Auth
       );
     }
 
-    if (options.initUsername.length < 3 || options.initUsername.length > 64) {
+    if (!isValidUsername(options.initUsername)) {
       throw new AuthSetupError("SCRIBEDOG_INIT_USERNAME must be between 3 and 64 characters.");
     }
 

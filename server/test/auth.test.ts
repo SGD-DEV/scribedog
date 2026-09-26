@@ -1,4 +1,4 @@
-import { readFile, rm } from "node:fs/promises";
+import { readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -137,6 +137,25 @@ describe("auth store", () => {
     expect(authFile.passwordHash).toMatch(/^\$scrypt\$/);
     expect(authFile.sessionEpoch).toBe(1);
     expect(authFile.passwordHash).not.toContain("first password");
+  });
+
+  it("adds the init username to an auth file from before usernames and keeps the password", async () => {
+    const vaultPath = await tempVault();
+    const authFilePath = path.join(vaultPath, SERVER_META_DIR, "auth.json");
+    await openAuthStore({ vaultPath, initUsername: "testuser", initPassword: "first password", log });
+    const { username: _dropped, ...legacy } = JSON.parse(await readFile(authFilePath, "utf8"));
+    legacy.sessionEpoch = 3;
+    await writeFile(authFilePath, JSON.stringify(legacy));
+
+    await expect(openAuthStore({ vaultPath, initUsername: null, initPassword: null, log })).rejects.toThrow(/SCRIBEDOG_INIT_USERNAME/);
+
+    const store = await openAuthStore({ vaultPath, initUsername: "SGD_Admin", initPassword: null, log });
+    expect(await store.verifyCredentials("SGD_Admin", "first password")).toBe(true);
+    expect(store.sessionEpoch).toBe(3);
+
+    const migrated = JSON.parse(await readFile(authFilePath, "utf8"));
+    expect(migrated.username).toBe("SGD_Admin");
+    expect(migrated.passwordHash).toBe(legacy.passwordHash);
   });
 });
 
